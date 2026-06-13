@@ -8,19 +8,22 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com"
+        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com"
+        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com"
+        "EXPO_PUBLIC_API_URL": "https://api.faceshapelab.com",
+        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
       }
     }
   },
