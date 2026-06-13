@@ -1,0 +1,5 @@
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useAppTheme } from '@/hooks/useAppTheme';
+interface Props { title: string; subtitle?: string; value?: string; onPress?: () => void }
+export function ListRow({ title, subtitle, value, onPress }: Props) { const theme = useAppTheme(); return <Pressable android_ripple={{ color: theme.primarySoft }} onPress={onPress} style={[styles.row, { borderColor: theme.border }]}><View style={styles.copy}><Text style={[styles.title, { color: theme.text }]}>{title}</Text>{subtitle ? <Text style={[styles.subtitle, { color: theme.mutedText }]}>{subtitle}</Text> : null}</View>{value ? <Text style={[styles.value, { color: theme.primary }]}>{value}</Text> : null}</Pressable>; }
+const styles = StyleSheet.create({ row: { borderTopWidth: 1, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }, copy: { flex: 1 }, title: { fontWeight: '900' }, subtitle: { marginTop: 3, lineHeight: 19 }, value: { fontWeight: '900' } });

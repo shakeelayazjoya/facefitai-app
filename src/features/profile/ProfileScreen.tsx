@@ -1,0 +1,12 @@
+import { router } from 'expo-router';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ListRow } from '@/components/ui/ListRow';
+import { ScreenWrapper } from '@/components/ui/ScreenWrapper';
+import { useAppTheme } from '@/hooks/useAppTheme';
+import { useAuthStore } from '@/store/authStore';
+export function ProfileScreen() { const theme = useAppTheme(); const user = useAuthStore((s) => s.user); const logout = useAuthStore((s) => s.logout); if (!user) return <ScreenWrapper><EmptyState title="Guest mode" message="Login or create an account to save history, favorites, and reports." /><View style={styles.pad}><Button title="Login" onPress={() => router.push('/(auth)/login')} /></View></ScreenWrapper>; return <ScreenWrapper><ScrollView contentContainerStyle={styles.content}><Text style={[styles.title, { color: theme.text }]}>Profile</Text><Card><Text style={[styles.name, { color: theme.text }]}>{user.name}</Text><Text style={{ color: theme.mutedText }}>{user.email}</Text><View style={styles.badges}><Badge tone="primary" label={user.plan} /><Badge label={user.role} /></View></Card><Card><ListRow title="History & favorites" subtitle="View previous scans, saved reports, and comparisons" onPress={() => router.push('/(tabs)/dashboard')} /></Card><Card><ListRow title="Face symmetry" subtitle="Measure facial balance" onPress={() => router.push('/detectors/symmetry')} /><ListRow title="Face age" subtitle="Estimate apparent age" onPress={() => router.push('/detectors/age')} /><ListRow title="Eye shape" subtitle="Analyze eye type and traits" onPress={() => router.push('/detectors/eye')} /><ListRow title="Lip shape" subtitle="Analyze lip morphology" onPress={() => router.push('/detectors/lips')} /><ListRow title="Nose shape" subtitle="Analyze nose type and traits" onPress={() => router.push('/detectors/nose')} /></Card>{user.role === 'admin' ? <Button title="Admin tools" variant="secondary" onPress={() => router.push('/admin')} /> : null}<Button title="Logout" variant="danger" onPress={() => void logout()} /></ScrollView></ScreenWrapper>; }
+const styles = StyleSheet.create({ content: { padding: 18, gap: 16, paddingBottom: 40 }, title: { fontSize: 28, fontWeight: '900' }, name: { fontSize: 20, fontWeight: '900' }, badges: { flexDirection: 'row', gap: 8, marginTop: 12 }, pad: { padding: 18 } });
