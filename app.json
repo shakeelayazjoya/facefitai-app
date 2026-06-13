@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.fcideveloper.Faceshapapp"
+      "package": "com.faceshapelab.app"
     },
     "web": {
       "output": "static",
