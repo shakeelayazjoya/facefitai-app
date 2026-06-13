@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
   const theme = useAppTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -12,13 +14,16 @@ export default function TabsLayout() {
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.mutedText,
         tabBarHideOnKeyboard: true,
-        tabBarLabelStyle: { fontSize: 9, fontWeight: '700' },
-        tabBarItemStyle: { paddingVertical: 4 },
+        tabBarIconStyle: { marginTop: 2 },
+        tabBarLabelStyle: { fontSize: 9, lineHeight: 12, fontWeight: '800', marginTop: 1 },
+        tabBarItemStyle: { paddingTop: 3 },
         tabBarStyle: {
           backgroundColor: theme.surface,
           borderTopColor: theme.border,
-          minHeight: 66,
-          paddingTop: 5,
+          height: 60 + insets.bottom,
+          paddingTop: 4,
+          paddingBottom: Math.max(insets.bottom, 5),
+          borderTopWidth: 1,
         },
       }}
     >
@@ -60,7 +65,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="symmetry"
         options={{
-          title: 'Sym.',
+          title: 'Balance',
           tabBarIcon: ({ color, size }) => <Ionicons name="analytics-outline" color={color} size={size} />,
         }}
       />
