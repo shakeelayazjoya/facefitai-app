@@ -41,7 +41,7 @@ export function AuthScreen({ mode }: { mode: Mode }) {
   return <ScreenWrapper><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screen}>
     <View style={[styles.content, { maxWidth: responsive.contentWidth }]}> 
       <View style={styles.top}><View style={[styles.brandIcon, { backgroundColor: theme.primary }]}><Ionicons name="scan" color={theme.white} size={25} /></View><ThemeToggle /></View>
-      <Animated.View entering={FadeInDown.springify()} style={styles.heading}><AppText variant="h1" weight="black">{title}</AppText><AppText muted>{mode === 'forgot' ? strings.forgotSubtitle : strings.authSubtitle}</AppText></Animated.View>
+      <Animated.View entering={FadeInDown.springify()} style={styles.heading}><AppText variant="h1" editorial weight="black">{title}</AppText><AppText muted>{mode === 'forgot' ? strings.forgotSubtitle : strings.authSubtitle}</AppText></Animated.View>
       <AppCard style={styles.card}><View style={styles.form}>
         {mode === 'signup' ? <AppInput label="Full name" icon="person-outline" placeholder={strings.namePlaceholder} value={name} onChangeText={setName} /> : null}
         <AppInput label="Email" icon="mail-outline" autoCapitalize="none" keyboardType="email-address" placeholder={strings.emailPlaceholder} value={email} onChangeText={setEmail} />
@@ -49,9 +49,9 @@ export function AuthScreen({ mode }: { mode: Mode }) {
         <AppButton loading={mutation.isPending} title={action} icon="arrow-forward-outline" onPress={() => mutation.mutate()} />
       </View></AppCard>
       <View style={styles.links}>{mode === 'login' ? <Link href="/(auth)/forgot" style={[styles.link, { color: theme.primary }]}>{strings.forgotLink}</Link> : null}<Link href={mode === 'login' ? '/(auth)/signup' : '/(auth)/login'} style={[styles.link, { color: theme.primary }]}>{mode === 'login' ? strings.signupLink : strings.loginLink}</Link></View>
-      <View style={[styles.trust, { borderColor: theme.border }]}><Ionicons name="shield-checkmark-outline" color={theme.success} size={18} /><AppText variant="small" muted>Your photos stay private and are used only for your requested analysis.</AppText></View>
+      <View style={[styles.trust, { borderColor: theme.border }]}><Ionicons name="shield-checkmark-outline" color={theme.success} size={16} /><AppText variant="small" muted>Private by design.</AppText></View>
     </View>
   </ScrollView></ScreenWrapper>;
 }
 
-const styles = StyleSheet.create({ screen: { flexGrow: 1, justifyContent: 'center', padding: spacing.lg }, content: { width: '100%', alignSelf: 'center', gap: spacing.xl }, top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, brandIcon: { width: 48, height: 48, borderRadius: radii.lg, alignItems: 'center', justifyContent: 'center' }, heading: { gap: spacing.sm }, card: { padding: spacing.xl }, form: { gap: spacing.lg }, links: { gap: spacing.md, alignItems: 'center' }, link: { fontSize: 14, fontWeight: '800' }, trust: { borderTopWidth: 1, paddingTop: spacing.lg, flexDirection: 'row', alignItems: 'center', gap: spacing.sm } });
+const styles = StyleSheet.create({ screen: { flexGrow: 1, justifyContent: 'center', padding: spacing.md }, content: { width: '100%', alignSelf: 'center', gap: spacing.lg }, top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }, brandIcon: { width: 44, height: 44, borderRadius: radii.lg, alignItems: 'center', justifyContent: 'center' }, heading: { gap: spacing.xs }, card: { padding: spacing.lg }, form: { gap: spacing.md }, links: { gap: spacing.sm, alignItems: 'center' }, link: { fontSize: 12, fontWeight: '800' }, trust: { borderTopWidth: 1, paddingTop: spacing.md, flexDirection: 'row', alignItems: 'center', gap: spacing.sm } });

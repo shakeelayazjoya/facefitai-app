@@ -1,7 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AppText } from './AppText';
-import { radii, spacing } from '@/constants/theme';
+import { spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
-export function GradientHeader({ eyebrow, title, description, icon = 'sparkles' }: { eyebrow?: string; title: string; description?: string; icon?: keyof typeof Ionicons.glyphMap }) { const theme = useAppTheme(); return <View style={[styles.wrap, { backgroundColor: theme.primarySoft, borderColor: theme.borderStrong }]}><View style={[styles.icon, { backgroundColor: theme.primary }]}><Ionicons name={icon} size={24} color={theme.white} /></View><View style={styles.copy}>{eyebrow ? <AppText variant="caption" style={{ color: theme.primary, textTransform: 'uppercase', letterSpacing: 1.4 }}>{eyebrow}</AppText> : null}<AppText variant="h1">{title}</AppText>{description ? <AppText muted>{description}</AppText> : null}</View></View>; }
-const styles = StyleSheet.create({ wrap: { borderRadius: radii.xxl, borderCurve: 'continuous', borderWidth: 1, padding: spacing.lg, gap: spacing.md, flexDirection: 'row', alignItems: 'flex-start' }, icon: { width: 44, height: 44, borderRadius: 15, alignItems: 'center', justifyContent: 'center' }, copy: { flex: 1, gap: spacing.xs } });
+
+export function GradientHeader({ eyebrow, title, description, icon = 'sparkles' }: { eyebrow?: string; title: string; description?: string; icon?: keyof typeof Ionicons.glyphMap }) {
+  const theme = useAppTheme(); return <Animated.View entering={FadeInDown.springify()} style={styles.wrap}><View style={styles.eyebrow}>{eyebrow ? <><Ionicons name={icon} size={13} color={theme.gold} /><AppText variant="caption" color={theme.gold} style={styles.label}>{eyebrow}</AppText></> : null}</View><AppText variant="display" editorial weight="bold" align="center" style={styles.title}>{title}</AppText>{description ? <AppText variant="small" muted align="center">{description}</AppText> : null}</Animated.View>;
+}
+const styles = StyleSheet.create({ wrap: { alignItems: 'center', paddingVertical: spacing.sm, paddingHorizontal: spacing.lg, gap: spacing.xxs }, eyebrow: { flexDirection: 'row', alignItems: 'center', gap: 5 }, label: { textTransform: 'uppercase', letterSpacing: 1.1 }, title: { textTransform: 'uppercase', letterSpacing: 0.4 } });

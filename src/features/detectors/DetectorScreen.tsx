@@ -25,9 +25,9 @@ export function DetectorScreen({ kind }: { kind: DetectorKind }) {
   }, onSuccess: (data) => { analytics.track('scan_completed', { kind }); if (kind === 'face' && 'face_shape' in data) addReport(data, asset?.uri); }, onError: (error) => { analytics.track('scan_failed', { kind }); showToast(error.message); } });
   const analyze = (image: ImageAsset) => { analytics.track('scan_started', { kind }); mutation.reset(); setAsset(image); mutation.mutate(image); };
   return <ScreenWrapper><ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.screen}><View style={[styles.content, { maxWidth: responsive.contentWidth }]}> 
-    <GradientHeader eyebrow="AI feature studio" title={config.title} description={config.description} icon={icons[kind]} />
+    <GradientHeader eyebrow="AI studio" title={config.title} description={config.description} icon={icons[kind]} />
     {asset ? <DetectorOverlay asset={asset} kind={kind} result={mutation.data ?? null} /> : null}
-    <ImagePickerPanel disabled={mutation.isPending} processing={mutation.isPending} loadingLabel={config.loadingLabel} title={config.uploadTitle} description={config.uploadDescription} uploadAction={config.uploadAction} cameraAction={config.cameraAction} filePrefix={config.filePrefix} onPick={analyze} />
+    <ImagePickerPanel kind={kind} disabled={mutation.isPending} processing={mutation.isPending} loadingLabel={config.loadingLabel} title={config.uploadTitle} description={config.uploadDescription} uploadAction={config.uploadAction} cameraAction={config.cameraAction} filePrefix={config.filePrefix} onPick={analyze} />
     {!mutation.isPending ? <ResultCards kind={kind} result={mutation.data ?? null} emptyTitle={config.emptyTitle} /> : null}
   </View></ScrollView></ScreenWrapper>;
 }

@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
 import type { ThemeMode } from '@/constants/theme';
 
-const themeKey = 'faceshap_theme_mode';
+const themeKey = 'faceshap_theme_mode_v2';
 
 interface ThemeState {
   mode: ThemeMode;
@@ -12,11 +12,11 @@ interface ThemeState {
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  mode: 'system',
+  mode: 'dark',
   hydrated: false,
   hydrate: async () => {
     const stored = await SecureStore.getItemAsync(themeKey);
-    const mode: ThemeMode = stored === 'light' || stored === 'dark' ? stored : 'system';
+    const mode: ThemeMode = stored === 'light' || stored === 'dark' ? stored : 'dark';
     set({ mode, hydrated: true });
   },
   setMode: async (mode) => {

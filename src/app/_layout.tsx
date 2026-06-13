@@ -3,6 +3,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
+import { CormorantGaramond_600SemiBold } from '@expo-google-fonts/cormorant-garamond/600SemiBold';
+import { CormorantGaramond_700Bold } from '@expo-google-fonts/cormorant-garamond/700Bold';
+import { useFonts } from 'expo-font';
 import { AppState, Platform, type AppStateStatus } from 'react-native';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ToastProvider } from '@/hooks/useToast';
@@ -45,6 +48,7 @@ export default function RootLayout() {
   const onboardingReady = useOnboardingStore((state) => state.hydrated);
   const themeReady = useThemeStore((state) => state.hydrated);
   const resolvedTheme = useResolvedTheme();
+  const [fontsLoaded] = useFonts({ CormorantGaramond_600SemiBold, CormorantGaramond_700Bold });
 
   useEffect(() => {
     void Promise.all([hydrate(), hydrateOnboarding(), hydrateTheme()]);
@@ -54,7 +58,9 @@ export default function RootLayout() {
     return () => subscription.remove();
   }, [hydrate, hydrateOnboarding, hydrateTheme]);
 
-  useEffect(() => { if (authReady && onboardingReady && themeReady) void SplashScreen.hideAsync(); }, [authReady, onboardingReady, themeReady]);
+  useEffect(() => { if (authReady && onboardingReady && themeReady && fontsLoaded) void SplashScreen.hideAsync(); }, [authReady, onboardingReady, themeReady, fontsLoaded]);
+
+  if (!fontsLoaded) return null;
 
   return (
     <ErrorBoundary>

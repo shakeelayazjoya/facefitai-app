@@ -11,9 +11,9 @@ export interface OnboardingItem {
 }
 
 export const onboardingItems: readonly OnboardingItem[] = [
-  { id: 'scan', eyebrow: 'Precision AI', title: 'Understand your face', description: 'Turn one clear portrait into a thoughtful, easy-to-read facial analysis.', icon: 'scan-outline', highlights: ['Private upload', 'Fast analysis'] },
-  { id: 'personal', eyebrow: 'Made for you', title: 'Personal style guidance', description: 'Get recommendations shaped around your features, not generic beauty rules.', icon: 'sparkles-outline', highlights: ['Actionable tips', 'Personalized results'] },
-  { id: 'features', eyebrow: 'Feature studio', title: 'See every detail clearly', description: 'Explore face shape, symmetry, eyes, nose, lips, and apparent age in focused reports.', icon: 'analytics-outline', highlights: ['Visual overlays', 'Animated scores'] },
-  { id: 'style', eyebrow: 'Style smarter', title: 'Find your best look', description: 'Discover glasses, beard, grooming, and hairstyle ideas that complement your proportions.', icon: 'glasses-outline', highlights: ['Curated options', 'Easy comparisons'] },
-  { id: 'start', eyebrow: 'Your profile, decoded', title: 'Ready for your first scan?', description: 'Create your private profile and start building a personal style history.', icon: 'arrow-forward-circle-outline', highlights: ['Save reports', 'Track progress'] },
+  { id: 'scan', eyebrow: 'Precision AI', title: 'Know your face', description: 'One selfie. Clear insights.', icon: 'scan-outline', highlights: ['Private', 'Fast'] },
+  { id: 'personal', eyebrow: 'Personal', title: 'Style that fits', description: 'Guidance built around you.', icon: 'sparkles-outline', highlights: ['Useful tips', 'Your results'] },
+  { id: 'features', eyebrow: 'Details', title: 'See every feature', description: 'Shape, eyes, nose, lips, age.', icon: 'analytics-outline', highlights: ['Overlays', 'Scores'] },
+  { id: 'style', eyebrow: 'Discover', title: 'Find your look', description: 'Hair, beard, and glasses.', icon: 'glasses-outline', highlights: ['Curated', 'Simple'] },
+  { id: 'start', eyebrow: 'Ready', title: 'Start your scan', description: 'Upload. Analyze. Discover.', icon: 'arrow-forward-circle-outline', highlights: ['Save', 'Compare'] },
 ] as const;

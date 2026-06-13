@@ -1,12 +1,18 @@
-import { useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
-import { ScrollView, StyleSheet, Text } from 'react-native';
-import { Card } from '@/components/ui/Card';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useLocalSearchParams } from 'expo-router';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { AppBadge } from '@/components/ui/Badge';
+import { GradientHeader } from '@/components/ui/GradientHeader';
+import { LoadingSkeleton } from '@/components/ui/SkeletonBlock';
 import { ProtectedRoute } from '@/components/ui/ProtectedRoute';
 import { ScreenWrapper } from '@/components/ui/ScreenWrapper';
-import { facefitApi } from '@/services/facefitApi';
-import { useAppTheme } from '@/hooks/useAppTheme';
 import { ResultCards } from '@/features/detectors/ResultCards';
-export function ReportDetailScreen() { const { id } = useLocalSearchParams<{ id: string }>(); const theme = useAppTheme(); const query = useQuery({ queryKey: ['scan', id], queryFn: () => facefitApi.getScan(id), enabled: Boolean(id) }); return <ProtectedRoute><ScreenWrapper>{query.isLoading ? <LoadingSpinner /> : <ScrollView contentContainerStyle={styles.content}><Text style={[styles.title, { color: theme.text }]}>Scan report</Text><Card><Text style={{ color: theme.mutedText }}>Status: {query.data?.status}</Text><Text style={{ color: theme.mutedText }}>Created: {query.data?.created_at ? new Date(query.data.created_at).toLocaleString() : '-'}</Text></Card><ResultCards kind="face" result={query.data?.report ?? null} emptyTitle="Report not ready" /></ScrollView>}</ScreenWrapper></ProtectedRoute>; }
-const styles = StyleSheet.create({ content: { padding: 18, gap: 16, paddingBottom: 40 }, title: { fontSize: 28, fontWeight: '900' } });
+import { facefitApi } from '@/services/facefitApi';
+import { spacing } from '@/constants/theme';
+import { useResponsive } from '@/utils/responsive';
+
+export function ReportDetailScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>(); const responsive = useResponsive(); const query = useQuery({ queryKey: ['scan', id], queryFn: () => facefitApi.getScan(id), enabled: Boolean(id) });
+  return <ProtectedRoute><ScreenWrapper><ScrollView contentContainerStyle={styles.screen}><View style={[styles.content, { maxWidth: responsive.contentWidth }]}><GradientHeader eyebrow="Saved scan" title="Report" description={query.data?.created_at ? new Date(query.data.created_at).toLocaleDateString() : 'Loading'} icon="document-text-outline" />{query.isLoading ? <><LoadingSkeleton height={112} /><LoadingSkeleton height={180} /></> : <><AppBadge label={query.data?.status ?? 'pending'} tone="primary" /><ResultCards kind="face" result={query.data?.report ?? null} emptyTitle="Not ready" /></>}</View></ScrollView></ScreenWrapper></ProtectedRoute>;
+}
+const styles = StyleSheet.create({ screen: { padding: spacing.md, paddingBottom: 40 }, content: { width: '100%', alignSelf: 'center', gap: spacing.md } });

@@ -30,7 +30,7 @@ function DetailCard({ item, delay }: { item: Detail; delay: number }) {
 }
 export function ResultCards({ result, emptyTitle, kind }: { result: DetectorResult | null; emptyTitle: string; kind: DetectorKind }) {
   const theme = useAppTheme();
-  if (!result) return <EmptyState icon="sparkles-outline" title={emptyTitle} message="Choose a clear portrait to reveal your detected features and personalized guidance." />;
+  if (!result) return <EmptyState icon="sparkles-outline" title={emptyTitle} message="Upload to see results." />;
   const allDetails = details(result); const quality = result.quality;
   const recommendations = isStyle(result) ? [...result.grooming_tips, ...(result.ai_style?.styling_advice ?? []), ...result.glasses.recommended_frames] : result.recommendations;
   return <View style={styles.wrap}>
