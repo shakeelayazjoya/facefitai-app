@@ -5,10 +5,12 @@ import { AppText } from '@/components/ui/AppText';
 import { AppBadge } from '@/components/ui/Badge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ResultScoreRing } from '@/components/ui/ResultScoreRing';
+import { AppButton } from '@/components/ui/Button';
 import { radii, spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { labelize } from '@/utils/formData';
 import type { AgeAnalysisResponse, DetectorKind, FeatureAnalysisResponse, StyleReport, SymmetryAnalysisResponse } from '@/types/api';
+import { ResultScoreSection, type ScoreMetric } from './ResultScoreSection';
 
 export type DetectorResult = StyleReport | FeatureAnalysisResponse | AgeAnalysisResponse | SymmetryAnalysisResponse;
 interface Detail { title: string; value: string; icon: keyof typeof Ionicons.glyphMap }
@@ -25,18 +27,36 @@ function details(result: DetectorResult): Detail[] {
   if (isSymmetry(result)) return result.regions.map((item) => ({ title: labelize(item.region), value: `${item.score}% symmetry`, icon: 'analytics-outline' as const }));
   return [{ title: 'Confidence', value: `${result.confidence}% match`, icon: 'checkmark-circle-outline' }, ...result.traits.map((item) => ({ title: item.label, value: item.value, icon: 'sparkles-outline' as const }))];
 }
+const ranked = (values: Record<string, number>): ScoreMetric[] => Object.entries(values).sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label: labelize(label), value }));
+function matchScores(result: DetectorResult): ScoreMetric[] {
+  if (isStyle(result)) return ranked(result.face_shape.shape_scores);
+  if (isAge(result)) return result.range_scores.map((item) => ({ label: item.range, value: item.score }));
+  if (isSymmetry(result)) return result.regions.map((item) => ({ label: labelize(item.region), value: item.score }));
+  return result.type_scores.map((item) => ({ label: labelize(item.type), value: item.score }));
+}
+function featureScores(result: DetectorResult): ScoreMetric[] {
+  if (isStyle(result)) return [...Object.entries(result.features.ratings).map(([label, item]) => ({ label: labelize(label), value: item.score })), { label: 'Eye symmetry', value: result.features.eyes_symmetry }, { label: 'Beard fit', value: result.beard.beard_score }, { label: 'Clean shave fit', value: result.beard.clean_shave_score }];
+  if (isAge(result)) return result.signals.map((item) => ({ label: item.label, value: item.confidence }));
+  if (isSymmetry(result)) return result.regions.map((item) => ({ label: `${labelize(item.region)} confidence`, value: item.confidence }));
+  return result.traits.map((item) => ({ label: item.label, value: item.confidence }));
+}
+function qualityScores(result: DetectorResult): ScoreMetric[] { return [{ label: 'Photo quality', value: result.quality.quality_score }, { label: 'Head pose', value: result.quality.head_pose_score }, { label: 'Blur score', value: result.quality.blur_score }]; }
 function DetailCard({ item, delay }: { item: Detail; delay: number }) {
   const theme = useAppTheme(); return <AnimatedCard delay={delay}><View style={styles.detail}><View style={[styles.detailIcon, { backgroundColor: theme.primarySoft }]}><Ionicons name={item.icon} color={theme.primary} size={20} /></View><View style={styles.detailCopy}><AppText weight="black">{item.title}</AppText><AppText muted>{item.value}</AppText></View></View></AnimatedCard>;
 }
-export function ResultCards({ result, emptyTitle, kind }: { result: DetectorResult | null; emptyTitle: string; kind: DetectorKind }) {
+export function ResultCards({ result, emptyTitle, kind, onReset }: { result: DetectorResult | null; emptyTitle: string; kind: DetectorKind; onReset?: () => void }) {
   const theme = useAppTheme();
   if (!result) return <EmptyState icon="sparkles-outline" title={emptyTitle} message="Upload to see results." />;
   const allDetails = details(result); const quality = result.quality;
   const recommendations = isStyle(result) ? [...result.grooming_tips, ...(result.ai_style?.styling_advice ?? []), ...result.glasses.recommended_frames] : result.recommendations;
   return <View style={styles.wrap}>
-    <AnimatedCard><View style={styles.summary}><ResultScoreRing score={resultScore(result)} label="Match" size={102} /><View style={styles.summaryCopy}><AppText variant="caption" color={theme.primary} style={styles.eyebrow}>ANALYSIS COMPLETE</AppText><AppText variant="h3">{labels[kind]}</AppText><AppText variant="h2" color={theme.primary}>{resultValue(result)}</AppText><AppBadge tone={quality.quality_score > 70 ? 'primary' : 'warning'} label={`Photo quality ${quality.quality_score}%`} /></View></View></AnimatedCard>
+    <AnimatedCard><View style={styles.summary}><ResultScoreRing score={resultScore(result)} label="Match" size={102} /><View style={styles.summaryCopy}><AppText variant="caption" color={theme.primary} style={styles.eyebrow}>ANALYSIS COMPLETE</AppText><AppText variant="h3">{labels[kind]}</AppText><AppText variant="h2" color={theme.primary}>{resultValue(result)}</AppText><View style={styles.badges}><AppBadge tone={quality.quality_score > 70 ? 'primary' : 'warning'} label={`Quality ${quality.quality_score}%`} /><AppBadge label={`${result.processing_ms} ms`} /></View></View></View></AnimatedCard>
+    {onReset ? <AppButton title="Analyze another photo" icon="refresh-outline" variant="secondary" onPress={onReset} /> : null}
+    <ResultScoreSection title={kind === 'face' ? 'Shape match' : 'Result confidence'} icon={icons[kind]} scores={matchScores(result)} delay={70} />
+    <ResultScoreSection title="Feature confidence" icon="analytics-outline" scores={featureScores(result)} delay={120} />
     <View style={styles.grid}>{allDetails.map((item, index) => <View key={`${item.title}-${index}`} style={styles.gridItem}><DetailCard item={item} delay={70 + index * 45} /></View>)}</View>
-    <AnimatedCard delay={200}><View style={styles.sectionTitle}><Ionicons name="shield-checkmark-outline" color={theme.success} size={21} /><AppText variant="h3">Scan quality</AppText></View><View style={styles.badges}><AppBadge label={quality.single_face ? 'Single face' : 'Multiple faces'} tone={quality.single_face ? 'primary' : 'warning'} /><AppBadge label={quality.front_facing ? 'Front facing' : 'Turn forward'} tone={quality.front_facing ? 'primary' : 'warning'} /><AppBadge label={labelize(quality.lighting)} /></View></AnimatedCard>
+    <ResultScoreSection title="Scan quality" icon="shield-checkmark-outline" scores={qualityScores(result)} delay={200} />
+    <AnimatedCard delay={220}><View style={styles.sectionTitle}><Ionicons name="shield-checkmark-outline" color={theme.success} size={21} /><AppText variant="h3">Photo checks</AppText></View><View style={styles.badges}><AppBadge label={quality.single_face ? 'Single face' : 'Multiple faces'} tone={quality.single_face ? 'primary' : 'warning'} /><AppBadge label={quality.front_facing ? 'Front facing' : 'Turn forward'} tone={quality.front_facing ? 'primary' : 'warning'} /><AppBadge label={labelize(quality.lighting)} /></View>{quality.warnings.map((warning) => <View key={warning} style={styles.tip}><Ionicons name="alert-circle-outline" color={theme.warning} size={17} /><AppText muted style={styles.tipText}>{warning}</AppText></View>)}</AnimatedCard>
     <AnimatedCard delay={250}><View style={styles.sectionTitle}><Ionicons name="bulb-outline" color={theme.warning} size={21} /><AppText variant="h3">Personal recommendations</AppText></View>{recommendations.slice(0, 8).map((item) => <View key={item} style={styles.tip}><Ionicons name="checkmark-circle" color={theme.primary} size={17} /><AppText muted style={styles.tipText}>{item}</AppText></View>)}</AnimatedCard>
   </View>;
 }

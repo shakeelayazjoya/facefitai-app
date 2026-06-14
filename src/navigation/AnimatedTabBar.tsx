@@ -11,7 +11,7 @@ import { TabBarItem } from './TabBarItem';
 const tabs = [
   { route: 'eyes', label: 'Eyes', icon: 'eye-outline', activeIcon: 'eye' }, { route: 'nose', label: 'Nose', icon: 'body-outline', activeIcon: 'body' },
   { route: 'lips', label: 'Lips', icon: 'happy-outline', activeIcon: 'happy' }, { route: 'index', label: 'Face', icon: 'scan-outline', activeIcon: 'scan', center: true },
-  { route: 'age', label: 'Age', icon: 'time-outline', activeIcon: 'time' }, { route: 'symmetry', label: 'Balance', icon: 'analytics-outline', activeIcon: 'analytics' },
+  { route: 'age', label: 'Age', icon: 'time-outline', activeIcon: 'time' }, { route: 'symmetry', label: 'Symmetry', icon: 'analytics-outline', activeIcon: 'analytics' },
   { route: 'profile', label: 'Profile', icon: 'person-outline', activeIcon: 'person' },
 ] as const;
 
