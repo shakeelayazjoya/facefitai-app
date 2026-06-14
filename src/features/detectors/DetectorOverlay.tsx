@@ -14,6 +14,7 @@ import type {
 } from '@/types/api';
 import type { ImageAsset } from '@/utils/formData';
 import type { DetectorResult } from './ResultCards';
+import { AnalysisLoader } from '@/components/ui/AnalysisLoader';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import type { AppPalette } from '@/constants/theme';
 
@@ -21,6 +22,9 @@ interface Props {
   asset: ImageAsset;
   kind: DetectorKind;
   result: DetectorResult | null;
+  processing?: boolean;
+  loadingLabel?: string;
+  onImageReady?: () => void;
 }
 
 function points(rows: Landmark[]): string {
@@ -90,7 +94,7 @@ function Geometry({ kind, result, scale, colors }: { kind: DetectorKind; result:
   return <><BoxShape box={symmetry.face_box} scale={scale} color={colors.info} outline={colors.black} /><StrongLine rows={symmetry.centerline} scale={scale} color={colors.accent} outline={colors.black} /><LandmarkShapes rows={symmetry.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;
 }
 
-export function DetectorOverlay({ asset, kind, result }: Props) {
+export function DetectorOverlay({ asset, kind, result, processing = false, loadingLabel = 'Analyzing', onImageReady }: Props) {
   const theme = useAppTheme();
   const width = asset.width || 1;
   const height = asset.height || 1;
@@ -105,16 +109,18 @@ export function DetectorOverlay({ asset, kind, result }: Props) {
 
   return (
     <View style={[styles.frame, { aspectRatio: width / height, backgroundColor: theme.black }]}> 
-      <Image source={{ uri: asset.uri }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory-disk" transition={180} />
+      <Image source={{ uri: asset.uri }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory-disk" recyclingKey={asset.uri} transition={60} onLoad={onImageReady} onError={onImageReady} />
       {result ? (
         <Svg style={StyleSheet.absoluteFill} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" pointerEvents="none">
           <Geometry kind={kind} result={result} scale={scale} colors={theme} />
         </Svg>
       ) : null}
+      {processing ? <View style={[StyleSheet.absoluteFill, styles.loading, { backgroundColor: theme.overlay }]}><AnalysisLoader label={loadingLabel} compact /></View> : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   frame: { width: '100%', maxHeight: 440, minHeight: 220, borderRadius: 24, overflow: 'hidden' },
+  loading: { alignItems: 'center', justifyContent: 'center', padding: 18 },
 });
