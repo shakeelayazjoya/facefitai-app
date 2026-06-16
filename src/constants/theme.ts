@@ -53,4 +53,4 @@ export const darkTheme: AppPalette = {
 export const spacing = { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, huge: 40 } as const;
 export const radii = { sm: 10, md: 14, lg: 18, xl: 24, xxl: 30, hero: 36, pill: 999 } as const;
 export const typography = { hero: 30, h1: 24, h2: 20, h3: 16, body: 13, small: 11, caption: 9 } as const;
-export const layout = { maxContentWidth: 760, screenPadding: 18, tabBarHeight: 68, safeTop: 56 } as const;
+export const layout = { maxContentWidth: 760, screenPadding: 18, tabBarHeight: 56, safeTop: 56 } as const;
