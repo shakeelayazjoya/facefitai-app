@@ -34,5 +34,7 @@ export const strings = {
   analysisEmpty: 'Upload a selfie to start.',
   scanSaved: 'Scan saved to favorites.',
   reportUnavailable: 'Report not ready.',
+  reportExportReady: 'Report export is ready.',
+  reportExportFailed: 'Export failed. Try again.',
   deepLinkHost: 'faceshapapp://',
 } as const;

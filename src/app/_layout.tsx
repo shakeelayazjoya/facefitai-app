@@ -9,6 +9,7 @@ import { useFonts } from 'expo-font';
 import { AppState, Platform, type AppStateStatus } from 'react-native';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ToastProvider } from '@/hooks/useToast';
+import { SessionModalProvider, useSessionModal } from '@/hooks/useSessionModal';
 import { analytics } from '@/services/analytics';
 import { useAuthStore } from '@/store/authStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
@@ -21,6 +22,20 @@ function onAppStateChange(status: AppStateStatus): void {
   if (Platform.OS !== 'web') {
     focusManager.setFocused(status === 'active');
   }
+}
+
+function SessionWatcher() {
+  const sessionExpired = useAuthStore((state) => state.sessionExpired);
+  const acknowledge = useAuthStore((state) => state.acknowledgeSessionExpired);
+  const { showSessionExpired } = useSessionModal();
+
+  useEffect(() => {
+    if (!sessionExpired) return;
+    showSessionExpired();
+    acknowledge();
+  }, [acknowledge, sessionExpired, showSessionExpired]);
+
+  return null;
 }
 
 export default function RootLayout() {
@@ -66,8 +81,11 @@ export default function RootLayout() {
     <ErrorBoundary>
       <QueryClientProvider client={client}>
         <ToastProvider>
-          <StatusBar style={resolvedTheme === 'dark' ? 'light' : 'dark'} />
-          <Stack screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }} />
+          <SessionModalProvider>
+            <StatusBar style={resolvedTheme === 'dark' ? 'light' : 'dark'} />
+            <SessionWatcher />
+            <Stack screenOptions={{ headerShown: false, animation: 'fade_from_bottom' }} />
+          </SessionModalProvider>
         </ToastProvider>
       </QueryClientProvider>
     </ErrorBoundary>

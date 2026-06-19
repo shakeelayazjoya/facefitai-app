@@ -31,7 +31,7 @@ export function DetectorScreen({ kind }: { kind: DetectorKind }) {
     {asset ? <DetectorOverlay asset={asset} kind={kind} result={mutation.data ?? null} processing={mutation.isPending || !imageReady} loadingLabel={imageReady ? config.loadingLabel : 'Preparing photo'} onImageReady={() => setImageReady(true)} /> : null}
     {!asset ? <ImagePickerPanel kind={kind} disabled={mutation.isPending} title={config.uploadTitle} description={config.uploadDescription} uploadAction={config.uploadAction} cameraAction={config.cameraAction} filePrefix={config.filePrefix} onPick={analyze} /> : null}
     {mutation.isError && !mutation.isPending ? <AppButton title="Choose another photo" icon="refresh-outline" variant="secondary" onPress={reset} /> : null}
-    {!mutation.isPending ? <ResultCards kind={kind} result={mutation.data ?? null} emptyTitle={config.emptyTitle} onReset={mutation.data ? reset : undefined} /> : null}
+    {!mutation.isPending ? <ResultCards kind={kind} result={mutation.data ?? null} emptyTitle={config.emptyTitle} onReset={mutation.data ? reset : undefined} scanId={kind === 'face' && mutation.data && 'scan_id' in mutation.data ? mutation.data.scan_id : undefined} /> : null}
   </View></ScrollView></ScreenWrapper>;
 }
 const styles = StyleSheet.create({ screen: { padding: spacing.md, paddingBottom: 44 }, content: { width: '100%', alignSelf: 'center', gap: spacing.md } });

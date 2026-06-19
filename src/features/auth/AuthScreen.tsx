@@ -37,7 +37,7 @@ export function AuthScreen({ mode }: { mode: Mode }) {
     const passwordCheck = validatePassword(password); if (!passwordCheck.isValid) throw { message: passwordCheck.message ?? strings.genericError } satisfies ApiError;
     if (mode === 'signup') { const nameCheck = validateName(name); if (!nameCheck.isValid) throw { message: nameCheck.message ?? strings.genericError } satisfies ApiError; return facefitApi.register({ name: name.trim(), email: email.trim(), password }); }
     return facefitApi.login({ email: email.trim(), password });
-  }, onSuccess: async (data) => { if (hasSession(data)) { await setSession(data); analytics.track(mode === 'signup' ? 'signup_success' : 'login_success'); router.replace('/(tabs)'); } else { showToast(data.message); router.replace('/(auth)/login'); } }, onError: (error) => showToast(error.message) });
+  }, onSuccess: async (data) => { if (hasSession(data)) { await setSession(data); analytics.track(mode === 'signup' ? 'signup_success' : 'login_success'); router.replace('/(tabs)'); } else { showToast(data.message); router.replace('/(auth)/login'); } }, onError: (error) => { if (!error.isAuthError) showToast(error.message); } });
   return <ScreenWrapper><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screen}>
     <View style={[styles.content, { maxWidth: responsive.contentWidth }]}> 
       <View style={styles.top}><View style={[styles.brandIcon, { backgroundColor: theme.primary }]}><Ionicons name="scan" color={theme.white} size={25} /></View><ThemeToggle /></View>

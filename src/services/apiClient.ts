@@ -8,6 +8,7 @@ export interface ApiError {
   status?: number;
   code?: string;
   isNetworkError?: boolean;
+  isAuthError?: boolean;
 }
 
 interface ErrorPayload {
@@ -66,6 +67,7 @@ function normalizeError(error: AxiosError<ErrorPayload>): ApiError {
     status: error.response?.status,
     code: payload?.code,
     isNetworkError,
+    isAuthError: error.response?.status === 401,
   };
 }
 
@@ -95,10 +97,19 @@ apiClient.interceptors.response.use(
         monitoring.captureException(refreshError, { scope: 'token_refresh' });
       }
       await unauthorizedHandler?.();
+      return Promise.reject({
+        message: 'Session expired',
+        status: 401,
+        code: 'SESSION_EXPIRED',
+        isNetworkError: false,
+        isAuthError: true,
+      } satisfies ApiError);
     }
 
     const normalized = normalizeError(error);
-    monitoring.captureException(error, { scope: 'api', status: normalized.status ?? null, code: normalized.code ?? null });
+    if (!normalized.isAuthError) {
+      monitoring.captureException(error, { scope: 'api', status: normalized.status ?? null, code: normalized.code ?? null });
+    }
     return Promise.reject(normalized);
   },
 );

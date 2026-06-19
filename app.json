@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Faceshap-app",
+    "name": "Face Shape Lab",
     "slug": "Faceshap-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,14 +8,14 @@
     "scheme": "faceshapapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.faceshapelab.app"
     },
     "android": {
+      "icon": "./assets/images/android-icon.png",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/images/android-adaptive-foreground.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.faceshapelab.app"
