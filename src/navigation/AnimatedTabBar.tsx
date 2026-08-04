@@ -7,11 +7,16 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 import { TabBarBackground } from './TabBarBackground';
 import { TabBarItem } from './TabBarItem';
 
+// Kept at an ODD count with the centre action exactly in the middle (3 | Face | 3).
+// An even count leaves one side a slot short, which both shrinks every icon and
+// opens a visible gap beside Face. Profile is deliberately not here — it is reached
+// from the GradientHeader avatar instead, which keeps this bar purely analysis tools.
 const tabs = [
   { route: 'eyes', label: 'Eyes', icon: 'eye-outline', activeIcon: 'eye' }, { route: 'nose', label: 'Nose', icon: 'body-outline', activeIcon: 'body' },
-  { route: 'lips', label: 'Lips', icon: 'happy-outline', activeIcon: 'happy' }, { route: 'emotion', label: 'Emotion', icon: 'sparkles-outline', activeIcon: 'sparkles' }, { route: 'index', label: 'Face', icon: 'scan-outline', activeIcon: 'scan', center: true },
+  { route: 'lips', label: 'Lips', icon: 'happy-outline', activeIcon: 'happy' },
+  { route: 'index', label: 'Face', icon: 'scan-outline', activeIcon: 'scan', center: true },
+  { route: 'emotion', label: 'Emotion', icon: 'sparkles-outline', activeIcon: 'sparkles' },
   { route: 'age', label: 'Age', icon: 'time-outline', activeIcon: 'time' }, { route: 'symmetry', label: 'Symmetry', icon: 'analytics-outline', activeIcon: 'analytics' },
-  { route: 'profile', label: 'Profile', icon: 'person-outline', activeIcon: 'person' },
 ] as const;
 
 // The centre action is laid out as its own fixed-width slot between two equal-width

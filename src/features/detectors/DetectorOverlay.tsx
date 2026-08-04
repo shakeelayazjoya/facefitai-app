@@ -104,6 +104,14 @@ export function DetectorOverlay({ asset, kind, result, processing = false, loadi
   const width = asset.width || 1;
   const height = asset.height || 1;
   const base = Math.max(width, height);
+  // Drive the frame from the aspect ratio, never from a max height: with both
+  // `width: '100%'` and `aspectRatio` set, a height cap makes flexbox shrink the
+  // WIDTH to preserve the ratio, which left a portrait photo ~250dp wide inside a
+  // 328dp column. Clamping the ratio keeps the frame edge-to-edge while stopping a
+  // pathological panorama or tower from producing an unusable frame. The Svg uses
+  // `meet`, which matches the Image's `contain`, so both letterbox identically and
+  // the landmark overlay stays aligned even when the clamp bites.
+  const frameRatio = Math.min(Math.max(width / height, 0.5), 2.2);
   const scale: OverlayScale = {
     line: Math.max(2.5, base * 0.0045),
     outline: Math.max(4.5, base * 0.008),
@@ -113,7 +121,7 @@ export function DetectorOverlay({ asset, kind, result, processing = false, loadi
   };
 
   return (
-    <View style={[styles.frame, { aspectRatio: width / height, backgroundColor: theme.black }]}> 
+    <View style={[styles.frame, { aspectRatio: frameRatio, backgroundColor: theme.black }]}>
       <Image source={{ uri: asset.uri }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory-disk" recyclingKey={asset.uri} transition={60} onLoad={onImageReady} onError={onImageReady} />
       {result ? (
         <Svg style={StyleSheet.absoluteFill} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" pointerEvents="none">
@@ -126,6 +134,6 @@ export function DetectorOverlay({ asset, kind, result, processing = false, loadi
 }
 
 const styles = StyleSheet.create({
-  frame: { width: '100%', maxHeight: 440, minHeight: 220, borderRadius: 24, overflow: 'hidden' },
+  frame: { width: '100%', alignSelf: 'stretch', borderRadius: 24, overflow: 'hidden' },
   loading: { alignItems: 'center', justifyContent: 'center', padding: 18 },
 });

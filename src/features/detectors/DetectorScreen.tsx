@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { GradientHeader } from '@/components/ui/GradientHeader';
@@ -20,14 +21,14 @@ import { ResultCards, type DetectorResult } from './ResultCards';
 
 const icons = { face: 'scan-outline', eye: 'eye-outline', nose: 'body-outline', lips: 'happy-outline', age: 'time-outline', symmetry: 'analytics-outline', emotion: 'sparkles-outline' } as const;
 export function DetectorScreen({ kind }: { kind: DetectorKind }) {
-  const { showToast } = useToast(); const config = getDetector(kind); const responsive = useResponsive(); const [asset, setAsset] = useState<ImageAsset | null>(null); const [imageReady, setImageReady] = useState(false); const addReport = useReportStore((s) => s.addReport);
+  const router = useRouter(); const { showToast } = useToast(); const config = getDetector(kind); const responsive = useResponsive(); const [asset, setAsset] = useState<ImageAsset | null>(null); const [imageReady, setImageReady] = useState(false); const addReport = useReportStore((s) => s.addReport);
   const mutation = useMutation<DetectorResult, ApiError, ImageAsset>({ mutationFn: async (image) => {
     if (kind === 'face') return facefitApi.analyzeFace(image); if (kind === 'eye') return facefitApi.analyzeEye(image); if (kind === 'nose') return facefitApi.analyzeNose(image); if (kind === 'lips') return facefitApi.analyzeLips(image); if (kind === 'age') return facefitApi.analyzeAge(image); if (kind === 'emotion') return facefitApi.analyzeExpression(image); return facefitApi.analyzeSymmetry(image);
   }, onSuccess: (data, image) => { analytics.track('scan_completed', { kind }); if (kind === 'face' && 'face_shape' in data) addReport(data, image.uri); }, onError: (error) => { analytics.track('scan_failed', { kind }); showToast(error.message); } });
   const analyze = (image: ImageAsset) => { analytics.track('scan_started', { kind }); mutation.reset(); setImageReady(false); setAsset(image); mutation.mutate(image); };
   const reset = () => { mutation.reset(); setImageReady(false); setAsset(null); };
   return <ScreenWrapper><ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={styles.screen}><View style={[styles.content, { maxWidth: responsive.contentWidth }]}> 
-    <GradientHeader eyebrow="AI studio" title={config.title} description={config.description} icon={icons[kind]} />
+    <GradientHeader eyebrow="AI studio" title={config.title} description={config.description} icon={icons[kind]} action={{ icon: 'person-circle-outline', label: 'Open profile', onPress: () => router.push('/(tabs)/profile') }} />
     {asset ? <DetectorOverlay asset={asset} kind={kind} result={mutation.data ?? null} processing={mutation.isPending || !imageReady} loadingLabel={imageReady ? config.loadingLabel : 'Preparing photo'} onImageReady={() => setImageReady(true)} /> : null}
     {!asset ? <ImagePickerPanel kind={kind} disabled={mutation.isPending} title={config.uploadTitle} description={config.uploadDescription} uploadAction={config.uploadAction} cameraAction={config.cameraAction} filePrefix={config.filePrefix} onPick={analyze} /> : null}
     {mutation.isError && !mutation.isPending ? <AppButton title="Choose another photo" icon="refresh-outline" variant="secondary" onPress={reset} /> : null}
