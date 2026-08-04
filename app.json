@@ -46,6 +46,12 @@
         }
       ],
       "expo-sharing",
+      [
+        "expo-status-bar",
+        {
+          "style": "dark"
+        }
+      ],
       "@sentry/react-native",
       [
         "expo-build-properties",

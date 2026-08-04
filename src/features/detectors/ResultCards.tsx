@@ -111,7 +111,9 @@ export function ResultCards({ result, emptyTitle, kind, onReset, scanId }: { res
         </View>
         <View style={styles.smileCardRow}>
           <View style={[styles.smileEmojiBox, { backgroundColor: theme.primarySoft }]}>
-            <AppText style={{ fontSize: 32 }}>{smileEmoji}</AppText>
+            {/* AppText derives lineHeight from the *body* size, so overriding only
+                fontSize leaves a ~23px line box that clips a 32px emoji glyph. */}
+            <AppText style={{ fontSize: 32, lineHeight: 42, textAlign: 'center' }}>{smileEmoji}</AppText>
           </View>
           <View style={{ flex: 1, gap: 4 }}>
             <AppText variant="h3">{result.smile.label}</AppText>
