@@ -5,6 +5,7 @@ import type {
   AgeAnalysisResponse,
   Box,
   DetectorKind,
+  ExpressionAnalysisResponse,
   EyeAnalysisResponse,
   Landmark,
   LipsAnalysisResponse,
@@ -89,6 +90,10 @@ function Geometry({ kind, result, scale, colors }: { kind: DetectorKind; result:
   if (kind === 'age') {
     const age = result as AgeAnalysisResponse;
     return <><BoxShape box={age.face_box} scale={scale} color={colors.info} outline={colors.black} /><LandmarkShapes rows={age.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;
+  }
+  if (kind === 'emotion') {
+    const expr = result as ExpressionAnalysisResponse;
+    return <>{expr.face_box ? <BoxShape box={expr.face_box} scale={scale} color={colors.primary} outline={colors.black} /> : null}<LandmarkShapes rows={expr.mesh_landmarks ?? []} scale={scale} color={colors.gold} outline={colors.black} /></>;
   }
   const symmetry = result as SymmetryAnalysisResponse;
   return <><BoxShape box={symmetry.face_box} scale={scale} color={colors.info} outline={colors.black} /><StrongLine rows={symmetry.centerline} scale={scale} color={colors.accent} outline={colors.black} /><LandmarkShapes rows={symmetry.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;

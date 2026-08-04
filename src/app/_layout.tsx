@@ -11,10 +11,15 @@ import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ToastProvider } from '@/hooks/useToast';
 import { SessionModalProvider, useSessionModal } from '@/hooks/useSessionModal';
 import { analytics } from '@/services/analytics';
+import { initMonitoring } from '@/services/monitoring';
 import { useAuthStore } from '@/store/authStore';
 import { useOnboardingStore } from '@/store/onboardingStore';
 import { useThemeStore } from '@/store/themeStore';
 import { useResolvedTheme } from '@/hooks/useAppTheme';
+
+// Must run before the tree renders so ErrorBoundary and apiClient failures during
+// startup are captured rather than swallowed. No-ops without EXPO_PUBLIC_SENTRY_DSN.
+initMonitoring();
 
 void SplashScreen.preventAutoHideAsync();
 

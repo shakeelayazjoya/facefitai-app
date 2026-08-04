@@ -1,9 +1,9 @@
 import { File, Directory, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { facefitApi } from '@/services/facefitApi';
-import type { AgeAnalysisResponse, DetectorKind, FeatureAnalysisResponse, StyleReport, SymmetryAnalysisResponse } from '@/types/api';
+import type { AgeAnalysisResponse, DetectorKind, ExpressionAnalysisResponse, FeatureAnalysisResponse, StyleReport, SymmetryAnalysisResponse } from '@/types/api';
 
-export type DetectorResult = StyleReport | FeatureAnalysisResponse | AgeAnalysisResponse | SymmetryAnalysisResponse;
+export type DetectorResult = StyleReport | FeatureAnalysisResponse | AgeAnalysisResponse | SymmetryAnalysisResponse | ExpressionAnalysisResponse;
 export type ExportFormat = 'pdf' | 'json' | 'txt';
 
 interface ExportPayload { kind: DetectorKind; result: DetectorResult; scanId?: string }
@@ -13,6 +13,7 @@ const exportDir = new Directory(Paths.cache, 'report-exports');
 const isStyle = (value: DetectorResult): value is StyleReport => 'face_shape' in value;
 const isAge = (value: DetectorResult): value is AgeAnalysisResponse => 'apparent_age' in value;
 const isSymmetry = (value: DetectorResult): value is SymmetryAnalysisResponse => 'symmetry_score' in value;
+const isExpression = (value: DetectorResult): value is ExpressionAnalysisResponse => 'smile' in value;
 
 function slug(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -22,6 +23,7 @@ function summary(kind: DetectorKind, result: DetectorResult) {
   if (isStyle(result)) return `${result.face_shape.primary_shape} face`;
   if (isAge(result)) return `${result.apparent_age} years`;
   if (isSymmetry(result)) return `${result.symmetry_level} symmetry`;
+  if (isExpression(result)) return result.emotion ? `${result.emotion.label} (${result.smile.label})` : result.smile.label;
   return `${result.primary_type} ${kind}`;
 }
 
@@ -36,14 +38,22 @@ function asJson(payload: ExportPayload) {
 
 function asText(payload: ExportPayload) {
   const { kind, result } = payload;
+  const qualityScore = result.quality?.quality_score ?? 90;
+  const confidenceVal = 'confidence' in result && typeof result.confidence === 'number'
+    ? result.confidence
+    : isExpression(result)
+    ? result.emotion?.confidence ?? result.smile.score
+    : isStyle(result)
+    ? result.face_shape.confidence
+    : 0;
   const lines = [
     'Face Shape Lab',
     '',
     `Report: ${kind}`,
     `Summary: ${summary(kind, result)}`,
-    `Confidence: ${Math.round(('confidence' in result ? result.confidence : result.face_shape.confidence) ?? 0)}%`,
+    `Confidence: ${Math.round(confidenceVal ?? 0)}%`,
     `Processing: ${result.processing_ms} ms`,
-    `Photo quality: ${result.quality.quality_score}%`,
+    `Photo quality: ${qualityScore}%`,
     '',
   ];
   if (isStyle(result)) {
@@ -58,6 +68,14 @@ function asText(payload: ExportPayload) {
     result.signals.forEach((item) => lines.push(`${item.label}: ${String(item.value)} (${Math.round(item.confidence)}%)`));
   } else if (isSymmetry(result)) {
     result.regions.forEach((item) => lines.push(`${item.region}: ${Math.round(item.score)}%`));
+  } else if (isExpression(result)) {
+    lines.push(`Smile intensity: ${Math.round(result.smile.score)}% (${result.smile.label})`);
+    if (result.emotion) {
+      lines.push(`Dominant emotion: ${result.emotion.label} (${Math.round(result.emotion.confidence)}%)`);
+      result.emotion.scores.forEach((item) => lines.push(`- ${item.label}: ${Math.round(item.score)}%`));
+    }
+    if (result.age) lines.push(`Apparent age: ~${Math.round(result.age.value)} (${Math.round(result.age.low)}-${Math.round(result.age.high)})`);
+    if (result.gender) lines.push(`Gender: ${result.gender.label}`);
   } else {
     lines.push(`Detected type: ${result.primary_type}`);
     result.traits.forEach((item) => lines.push(`${item.label}: ${item.value} (${Math.round(item.confidence)}%)`));

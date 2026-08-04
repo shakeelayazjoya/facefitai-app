@@ -1,5 +1,5 @@
 export type FaceShape = 'oval' | 'round' | 'square' | 'rectangle' | 'heart' | 'diamond' | 'triangle';
-export type DetectorKind = 'face' | 'nose' | 'eye' | 'lips' | 'age' | 'symmetry';
+export type DetectorKind = 'face' | 'nose' | 'eye' | 'lips' | 'age' | 'symmetry' | 'emotion';
 export type StyleEditRegion = 'hair' | 'glasses' | 'beard' | 'lips' | 'nose';
 export interface Landmark { index: number; x: number; y: number }
 export interface Box { x: number; y: number; width: number; height: number }
@@ -21,6 +21,18 @@ export interface LipsAnalysisResponse extends FeatureAnalysisResponse { lips_box
 export interface EyeAnalysisResponse extends FeatureAnalysisResponse { eye_boxes: { left: Box; right: Box; combined: Box } }
 export interface AgeAnalysisResponse { apparent_age: number; age_range: string; confidence: number; model_source: 'opencv_dnn' | 'cv_landmark_estimator'; range_scores: Array<{ range: string; score: number }>; face_box: Box; landmarks: Landmark[]; signals: Array<{ label: string; value: number | string; confidence: number; evidence: Record<string, number | string> }>; recommendations: string[]; quality: QualityReport; processing_ms: number }
 export interface SymmetryAnalysisResponse { symmetry_score: number; symmetry_level: 'High' | 'Moderate' | 'Low'; confidence: number; face_box: Box; centerline: Landmark[]; landmarks: Landmark[]; geometry: Record<string, number>; regions: Array<{ region: string; score: number; delta_ratio: number; confidence: number; evidence: Record<string, number | string> }>; recommendations: string[]; quality: QualityReport; processing_ms: number }
+export interface ExpressionAnalysisResponse {
+  mode: 'full' | 'live';
+  smile: { score: number; label: string; left: number; right: number };
+  emotion: { label: string; confidence: number; scores: Array<{ label: string; score: number }> } | null;
+  age: { value: number; low: number; high: number; source: string } | null;
+  gender: { label: 'Male' | 'Female'; confidence: number } | null;
+  face_box: Box;
+  mesh_landmarks?: Landmark[];
+  quality: QualityReport | null;
+  recommendations: string[];
+  processing_ms: number;
+}
 export interface AuthUser { id: string; name: string; email: string; plan: string; role: string }
 export interface AuthResponse { access_token: string; refresh_token?: string; token_type: 'bearer'; user: AuthUser }
 export interface ScanSummary { id: string; status: string; image_url: string | null; face_shape: string | null; confidence: number | null; error_message: string | null; created_at: string }

@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
 import { imageToFormData, type ImageAsset } from '@/utils/formData';
-import type { AdminAnalytics, AdminReport, AdminUser, AgeAnalysisResponse, AuthResponse, EyeAnalysisResponse, FavoriteStyle, ImageReuseReport, LipsAnalysisResponse, NoseAnalysisResponse, ProductPublic, ScanComparison, ScanDetail, ScanSummary, StyleEditRegion, StyleEditResponse, StyleReport, SubscriptionPublic, SymmetryAnalysisResponse } from '@/types/api';
+import type { AdminAnalytics, AdminReport, AdminUser, AgeAnalysisResponse, AuthResponse, ExpressionAnalysisResponse, EyeAnalysisResponse, FavoriteStyle, ImageReuseReport, LipsAnalysisResponse, NoseAnalysisResponse, ProductPublic, ScanComparison, ScanDetail, ScanSummary, StyleEditRegion, StyleEditResponse, StyleReport, SubscriptionPublic, SymmetryAnalysisResponse } from '@/types/api';
 async function postImage<T>(url: string, asset: ImageAsset): Promise<T> { const response = await apiClient.post<T>(url, imageToFormData(asset), { headers: { 'Content-Type': 'multipart/form-data' } }); return response.data; }
 function styleEditForm(asset: ImageAsset, region: StyleEditRegion, instruction: string): FormData { const form = imageToFormData(asset); form.append('region', region); form.append('instruction', instruction); return form; }
 export const facefitApi = {
@@ -10,6 +10,12 @@ export const facefitApi = {
   analyzeLips: (asset: ImageAsset) => postImage<LipsAnalysisResponse>('/api/analyze-lips', asset),
   analyzeAge: (asset: ImageAsset) => postImage<AgeAnalysisResponse>('/api/analyze-age', asset),
   analyzeSymmetry: (asset: ImageAsset) => postImage<SymmetryAnalysisResponse>('/api/analyze-symmetry', asset),
+  analyzeExpression: async (asset: ImageAsset, mode: 'full' | 'live' = 'full') => {
+    const form = imageToFormData(asset);
+    form.append('mode', mode);
+    const response = await apiClient.post<ExpressionAnalysisResponse>('/api/analyze-expression', form, { headers: { 'Content-Type': 'multipart/form-data' } });
+    return response.data;
+  },
   login: async (payload: { email: string; password: string }) => (await apiClient.post<AuthResponse>('/auth/login', payload)).data,
   register: async (payload: { name: string; email: string; password: string }) => (await apiClient.post<AuthResponse>('/auth/register', payload)).data,
   forgotPassword: async (email: string) => (await apiClient.post<{ message: string }>('/auth/forgot-password', { email })).data,

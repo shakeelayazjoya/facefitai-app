@@ -18,11 +18,11 @@ import { DetectorOverlay } from './DetectorOverlay';
 import { ImagePickerPanel } from './ImagePickerPanel';
 import { ResultCards, type DetectorResult } from './ResultCards';
 
-const icons = { face: 'scan-outline', eye: 'eye-outline', nose: 'body-outline', lips: 'happy-outline', age: 'time-outline', symmetry: 'analytics-outline' } as const;
+const icons = { face: 'scan-outline', eye: 'eye-outline', nose: 'body-outline', lips: 'happy-outline', age: 'time-outline', symmetry: 'analytics-outline', emotion: 'sparkles-outline' } as const;
 export function DetectorScreen({ kind }: { kind: DetectorKind }) {
   const { showToast } = useToast(); const config = getDetector(kind); const responsive = useResponsive(); const [asset, setAsset] = useState<ImageAsset | null>(null); const [imageReady, setImageReady] = useState(false); const addReport = useReportStore((s) => s.addReport);
   const mutation = useMutation<DetectorResult, ApiError, ImageAsset>({ mutationFn: async (image) => {
-    if (kind === 'face') return facefitApi.analyzeFace(image); if (kind === 'eye') return facefitApi.analyzeEye(image); if (kind === 'nose') return facefitApi.analyzeNose(image); if (kind === 'lips') return facefitApi.analyzeLips(image); if (kind === 'age') return facefitApi.analyzeAge(image); return facefitApi.analyzeSymmetry(image);
+    if (kind === 'face') return facefitApi.analyzeFace(image); if (kind === 'eye') return facefitApi.analyzeEye(image); if (kind === 'nose') return facefitApi.analyzeNose(image); if (kind === 'lips') return facefitApi.analyzeLips(image); if (kind === 'age') return facefitApi.analyzeAge(image); if (kind === 'emotion') return facefitApi.analyzeExpression(image); return facefitApi.analyzeSymmetry(image);
   }, onSuccess: (data, image) => { analytics.track('scan_completed', { kind }); if (kind === 'face' && 'face_shape' in data) addReport(data, image.uri); }, onError: (error) => { analytics.track('scan_failed', { kind }); showToast(error.message); } });
   const analyze = (image: ImageAsset) => { analytics.track('scan_started', { kind }); mutation.reset(); setImageReady(false); setAsset(image); mutation.mutate(image); };
   const reset = () => { mutation.reset(); setImageReady(false); setAsset(null); };

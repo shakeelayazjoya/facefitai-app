@@ -3,7 +3,7 @@
     "name": "Face Shape Lab",
     "slug": "Faceshap-app",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "faceshapapp",
     "userInterfaceStyle": "automatic",
@@ -46,7 +46,16 @@
         }
       ],
       "expo-sharing",
-      "@sentry/react-native"
+      "@sentry/react-native",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
