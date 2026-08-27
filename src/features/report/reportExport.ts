@@ -1,12 +1,13 @@
 import { File, Directory, Paths } from 'expo-file-system';
+import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
-import { facefitApi } from '@/services/facefitApi';
 import type { AgeAnalysisResponse, DetectorKind, ExpressionAnalysisResponse, FeatureAnalysisResponse, StyleReport, SymmetryAnalysisResponse } from '@/types/api';
+import type { ImageAsset } from '@/utils/formData';
 
 export type DetectorResult = StyleReport | FeatureAnalysisResponse | AgeAnalysisResponse | SymmetryAnalysisResponse | ExpressionAnalysisResponse;
 export type ExportFormat = 'pdf' | 'json' | 'txt';
 
-interface ExportPayload { kind: DetectorKind; result: DetectorResult; scanId?: string }
+interface ExportPayload { kind: DetectorKind; result: DetectorResult; scanId?: string; asset?: ImageAsset | null }
 
 const exportDir = new Directory(Paths.cache, 'report-exports');
 
@@ -89,19 +90,31 @@ function fileName(payload: ExportPayload, format: ExportFormat) {
   return `${slug(payload.kind)}-${Date.now()}.${format}`;
 }
 
-export function availableFormats(payload: ExportPayload): ExportFormat[] {
-  return payload.scanId ? ['pdf', 'json', 'txt'] : ['json', 'txt'];
+export function availableFormats(_payload: ExportPayload): ExportFormat[] {
+  // PDF is rendered on-device from the result, so it no longer depends on a saved
+  // scanId — every detector can export one.
+  return ['pdf', 'json', 'txt'];
+}
+
+/** Renders the styled HTML report to a PDF and shares it. */
+async function exportPdf(payload: ExportPayload) {
+  const { buildReportHtml } = await import('./reportPdf');
+  const html = await buildReportHtml(payload.kind, payload.result, payload.asset);
+  const { uri } = await Print.printToFileAsync({ html, base64: false });
+
+  if (!(await Sharing.isAvailableAsync())) return uri;
+  await Sharing.shareAsync(uri, { dialogTitle: 'Export report', mimeType: 'application/pdf', UTI: 'com.adobe.pdf' });
+  return uri;
 }
 
 export async function exportAnalysisReport(payload: ExportPayload, format: ExportFormat) {
+  if (format === 'pdf') return exportPdf(payload);
+
   exportDir.create({ idempotent: true, intermediates: true });
   const file = new File(exportDir, fileName(payload, format));
   file.create({ overwrite: true, intermediates: true });
 
-  if (format === 'pdf') {
-    if (!payload.scanId) throw new Error('PDF export is only available for saved face reports.');
-    file.write(new Uint8Array(await facefitApi.downloadReport(payload.scanId)));
-  } else if (format === 'json') {
+  if (format === 'json') {
     file.write(asJson(payload));
   } else {
     file.write(asText(payload));
@@ -112,8 +125,8 @@ export async function exportAnalysisReport(payload: ExportPayload, format: Expor
 
   await Sharing.shareAsync(file.uri, {
     dialogTitle: 'Export report',
-    mimeType: format === 'pdf' ? 'application/pdf' : format === 'json' ? 'application/json' : 'text/plain',
-    UTI: format === 'pdf' ? 'com.adobe.pdf' : format === 'json' ? 'public.json' : 'public.plain-text',
+    mimeType: format === 'json' ? 'application/json' : 'text/plain',
+    UTI: format === 'json' ? 'public.json' : 'public.plain-text',
   });
   return file.uri;
 }

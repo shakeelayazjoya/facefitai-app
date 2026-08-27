@@ -7,19 +7,20 @@ import { spacing } from '@/constants/theme';
 import { strings } from '@/constants/strings';
 import { useToast } from '@/hooks/useToast';
 import type { DetectorKind } from '@/types/api';
+import type { ImageAsset } from '@/utils/formData';
 import { availableFormats, exportAnalysisReport, type DetectorResult, type ExportFormat } from './reportExport';
 
-interface Props { kind: DetectorKind; result: DetectorResult; scanId?: string; delay?: number }
+interface Props { kind: DetectorKind; result: DetectorResult; scanId?: string; asset?: ImageAsset | null; delay?: number }
 
-export function ExportReportActions({ kind, result, scanId, delay = 0 }: Props) {
+export function ExportReportActions({ kind, result, scanId, asset, delay = 0 }: Props) {
   const { showToast } = useToast();
   const [busy, setBusy] = useState<ExportFormat | null>(null);
-  const formats = availableFormats({ kind, result, scanId });
+  const formats = availableFormats({ kind, result, scanId, asset });
 
   const runExport = async (format: ExportFormat) => {
     setBusy(format);
     try {
-      await exportAnalysisReport({ kind, result, scanId }, format);
+      await exportAnalysisReport({ kind, result, scanId, asset }, format);
       showToast(strings.reportExportReady);
     } catch (error) {
       showToast(error instanceof Error ? error.message : strings.reportExportFailed);

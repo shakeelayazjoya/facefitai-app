@@ -10,6 +10,7 @@ import { radii, spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { labelize } from '@/utils/formData';
 import type { AgeAnalysisResponse, DetectorKind, ExpressionAnalysisResponse, FeatureAnalysisResponse, StyleReport, SymmetryAnalysisResponse } from '@/types/api';
+import type { ImageAsset } from '@/utils/formData';
 import { ResultScoreSection, type ScoreMetric } from './ResultScoreSection';
 import { ExportReportActions } from '@/features/report/ExportReportActions';
 
@@ -94,7 +95,7 @@ function qualityScores(result: DetectorResult): ScoreMetric[] {
 function DetailCard({ item, delay }: { item: Detail; delay: number }) {
   const theme = useAppTheme(); return <AnimatedCard delay={delay}><View style={styles.detail}><View style={[styles.detailIcon, { backgroundColor: theme.primarySoft }]}><Ionicons name={item.icon} color={theme.primary} size={20} /></View><View style={styles.detailCopy}><AppText weight="black">{item.title}</AppText><AppText muted>{item.value}</AppText></View></View></AnimatedCard>;
 }
-export function ResultCards({ result, emptyTitle, kind, onReset, scanId }: { result: DetectorResult | null; emptyTitle: string; kind: DetectorKind; onReset?: () => void; scanId?: string }) {
+export function ResultCards({ result, emptyTitle, kind, onReset, scanId, asset }: { result: DetectorResult | null; emptyTitle: string; kind: DetectorKind; onReset?: () => void; scanId?: string; asset?: ImageAsset | null }) {
   const theme = useAppTheme();
   if (!result) return <EmptyState icon="sparkles-outline" title={emptyTitle} message="Upload to see results." />;
   const allDetails = details(result);
@@ -123,7 +124,7 @@ export function ResultCards({ result, emptyTitle, kind, onReset, scanId }: { res
       </AnimatedCard>
     ) : null}
     {onReset ? <AppButton title="Analyze another photo" icon="refresh-outline" variant="secondary" onPress={onReset} /> : null}
-    <ExportReportActions kind={kind} result={result} scanId={scanId} delay={45} />
+    <ExportReportActions kind={kind} result={result} scanId={scanId} asset={asset} delay={45} />
     <ResultScoreSection title={kind === 'face' ? 'Shape match' : isExpression(result) ? 'Emotion distribution' : 'Result confidence'} icon={icons[kind]} scores={matchScores(result)} delay={70} />
     <ResultScoreSection title="Feature confidence" icon="analytics-outline" scores={featureScores(result)} delay={120} />
     <View style={styles.grid}>{allDetails.map((item, index) => <View key={`${item.title}-${index}`} style={styles.gridItem}><DetailCard item={item} delay={70 + index * 45} /></View>)}</View>

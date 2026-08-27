@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
 import { imageToFormData, type ImageAsset } from '@/utils/formData';
-import type { AdminAnalytics, AdminReport, AdminUser, AgeAnalysisResponse, AuthResponse, ExpressionAnalysisResponse, EyeAnalysisResponse, FavoriteStyle, ImageReuseReport, LipsAnalysisResponse, NoseAnalysisResponse, ProductPublic, ScanComparison, ScanDetail, ScanSummary, StyleEditRegion, StyleEditResponse, StyleReport, SubscriptionPublic, SymmetryAnalysisResponse } from '@/types/api';
+import type { AdminAnalytics, AdminReport, AdminUser, AgeAnalysisResponse, AuthResponse, ExpressionAnalysisResponse, EyeAnalysisResponse, FavoriteStyle, GoldenRatioResponse, ImageReuseReport, LipsAnalysisResponse, NoseAnalysisResponse, ProductPublic, ScanComparison, ScanDetail, ScanSummary, StyleEditRegion, StyleEditResponse, StyleReport, SubscriptionPublic, SymmetryAnalysisResponse } from '@/types/api';
 async function postImage<T>(url: string, asset: ImageAsset): Promise<T> { const response = await apiClient.post<T>(url, imageToFormData(asset), { headers: { 'Content-Type': 'multipart/form-data' } }); return response.data; }
 function styleEditForm(asset: ImageAsset, region: StyleEditRegion, instruction: string): FormData { const form = imageToFormData(asset); form.append('region', region); form.append('instruction', instruction); return form; }
 export const facefitApi = {
@@ -36,4 +36,5 @@ export const facefitApi = {
   adminCreateProduct: async (payload: Partial<ProductPublic> & { name: string; category: string }) => (await apiClient.post<ProductPublic>('/api/admin/products', payload)).data,
   adminFeatureProduct: async (productId: string) => (await apiClient.post<ProductPublic>(`/api/admin/products/${productId}/feature`)).data,
   generateStyleEdit: async (payload: { asset: ImageAsset; region: StyleEditRegion; instruction: string }) => (await apiClient.post<StyleEditResponse>('/api/style/edit-image', styleEditForm(payload.asset, payload.region, payload.instruction), { headers: { 'Content-Type': 'multipart/form-data' } })).data,
+  analyzeGoldenRatio: (asset: ImageAsset) => postImage<GoldenRatioResponse>('/api/analyze-golden-ratio', asset),
 };
