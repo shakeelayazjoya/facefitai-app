@@ -1,7 +1,7 @@
 import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 
 // Face Illustration SVG graphic for Golden Ratio banner card
-export function FaceIllustrationSvg({ width = 90, height = 100, color = '#0F7662' }: { width?: number; height?: number; color?: string }) {
+export function FaceIllustrationSvg({ width = 90, height = 100, color = '#7C3AED' }: { width?: number; height?: number; color?: string }) {
   return (
     <Svg width={width} height={height} viewBox="0 0 100 110" fill="none">
       {/* Face Contour Fill */}
@@ -42,7 +42,7 @@ export function FaceIllustrationSvg({ width = 90, height = 100, color = '#0F7662
 }
 
 // Face Age Illustration SVG graphic with clock badge
-export function FaceAgeSvg({ width = 90, height = 100, color = '#0F7662' }: { width?: number; height?: number; color?: string }) {
+export function FaceAgeSvg({ width = 90, height = 100, color = '#7C3AED' }: { width?: number; height?: number; color?: string }) {
   return (
     <Svg width={width} height={height} viewBox="0 0 100 110" fill="none">
       {/* Face Contour */}
@@ -75,7 +75,7 @@ export function FaceAgeSvg({ width = 90, height = 100, color = '#0F7662' }: { wi
 }
 
 // Color Analysis Palette SVG Icon (Increased size & stroke width)
-export function ColorPaletteSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function ColorPaletteSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Path
@@ -94,7 +94,7 @@ export function ColorPaletteSvg({ size = 38, color = '#0F7662' }: { size?: numbe
 }
 
 // Skin Tone Pipette / Dropper SVG Icon (Increased size & stroke width)
-export function SkinToneSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function SkinToneSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Path d="M22 5L29 12" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
@@ -110,7 +110,7 @@ export function SkinToneSvg({ size = 38, color = '#0F7662' }: { size?: number; c
 }
 
 // Body Shape Silhouette SVG Icon (Increased size & dashed circle)
-export function BodyShapeSvg({ size = 40, color = '#0F7662' }: { size?: number; color?: string }) {
+export function BodyShapeSvg({ size = 40, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Circle cx="18" cy="7" r="3" stroke={color} strokeWidth="2.2" />
@@ -128,7 +128,7 @@ export function BodyShapeSvg({ size = 40, color = '#0F7662' }: { size?: number; 
 }
 
 // Body Type Swimsuit / Bikini Silhouette SVG Icon (Increased size & bold lines)
-export function BodyTypeSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function BodyTypeSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Path
@@ -143,7 +143,7 @@ export function BodyTypeSvg({ size = 38, color = '#0F7662' }: { size?: number; c
 }
 
 // Kibbe Dress SVG Icon (Increased size & green tint)
-export function KibbeDressSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function KibbeDressSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Path
@@ -161,7 +161,7 @@ export function KibbeDressSvg({ size = 38, color = '#0F7662' }: { size?: number;
 }
 
 // Kibbe Checklist / Clipboard SVG Icon (Increased size & bold checkmark)
-export function KibbeTestSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function KibbeTestSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Rect x="8" y="6" width="20" height="25" rx="4" stroke={color} strokeWidth="2.5" />
@@ -174,7 +174,7 @@ export function KibbeTestSvg({ size = 38, color = '#0F7662' }: { size?: number; 
 }
 
 // Celebrity Star SVG Icon (Increased size & bold star outline)
-export function CelebrityStarSvg({ size = 38, color = '#0F7662' }: { size?: number; color?: string }) {
+export function CelebrityStarSvg({ size = 38, color = '#7C3AED' }: { size?: number; color?: string }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 36 36" fill="none">
       <Path
