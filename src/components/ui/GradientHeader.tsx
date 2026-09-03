@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { AppText } from './AppText';
+import { BrandLogo } from './BrandLogo';
 import { radii, spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
@@ -11,13 +12,14 @@ interface Props {
   title: string;
   description?: string;
   icon?: keyof typeof Ionicons.glyphMap;
+  showLogo?: boolean;
   /** Optional top-right action. Profile is not in the tab bar, so it is reached from here. */
   action?: { icon: keyof typeof Ionicons.glyphMap; label: string; onPress: () => void };
   showBack?: boolean;
   onBack?: () => void;
 }
 
-export function GradientHeader({ eyebrow, title, description, icon = 'sparkles', action, showBack, onBack }: Props) {
+export function GradientHeader({ eyebrow, title, description, icon = 'sparkles', showLogo = true, action, showBack, onBack }: Props) {
   const theme = useAppTheme();
   const router = useRouter();
 
@@ -63,11 +65,17 @@ export function GradientHeader({ eyebrow, title, description, icon = 'sparkles',
         </Pressable>
       ) : null}
 
+      {showLogo && !showBack ? (
+        <View style={styles.logoBadge}>
+          <BrandLogo size={32} />
+        </View>
+      ) : null}
+
       <View style={styles.eyebrow}>
         {eyebrow ? (
           <>
-            <Ionicons name={icon} size={13} color={theme.gold} />
-            <AppText variant="caption" color={theme.gold} style={styles.label}>
+            <Ionicons name={icon} size={13} color={theme.primary} />
+            <AppText variant="caption" color={theme.primary} style={styles.label}>
               {eyebrow}
             </AppText>
           </>
@@ -87,6 +95,7 @@ export function GradientHeader({ eyebrow, title, description, icon = 'sparkles',
 
 const styles = StyleSheet.create({
   wrap: { alignItems: 'center', paddingVertical: spacing.sm, paddingHorizontal: spacing.lg, gap: spacing.xxs },
+  logoBadge: { marginBottom: 2 },
   eyebrow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   label: { textTransform: 'uppercase', letterSpacing: 1.1 },
   title: { textTransform: 'uppercase', letterSpacing: 0.4 },

@@ -35,19 +35,19 @@ export interface AppPalette {
 }
 
 export const lightTheme: AppPalette = {
-  background: '#E7EFE9', backgroundElevated: '#DCE9E1', surface: '#F5F8F4', surfaceAlt: '#E0EBE4', surfaceGlass: 'rgba(244,248,245,0.78)',
-  text: '#334A42', textStrong: '#102D26', mutedText: '#657D75', primary: '#0A6B58', primaryDark: '#064D40', primarySoft: '#CDE5DA',
-  secondary: '#167B68', accent: '#A77833', border: '#BBD0C6', borderStrong: '#8FAEA0', danger: '#A83D3D', dangerSoft: '#F0D7D4',
-  warning: '#A77833', warningSoft: '#EDE0C7', success: '#0A6B58', successSoft: '#CDE5DA', info: '#34766F', white: '#FFFFFF', black: '#071814',
-  overlay: 'rgba(7,24,20,0.56)', shadow: 'rgba(7,35,29,0.18)', gold: '#A77833', goldSoft: '#EDE0C7', gradientStart: '#EAF2ED', gradientEnd: '#D6E5DD', glow: 'rgba(16,121,98,0.16)',
+  background: '#F8FAFC', backgroundElevated: '#FFFFFF', surface: '#FFFFFF', surfaceAlt: '#F1F5F9', surfaceGlass: 'rgba(255,255,255,0.85)',
+  text: '#334155', textStrong: '#0F172A', mutedText: '#64748B', primary: '#7C3AED', primaryDark: '#5B21B6', primarySoft: '#EDE9FE',
+  secondary: '#10B981', accent: '#8B5CF6', border: '#E2E8F0', borderStrong: '#CBD5E1', danger: '#EF4444', dangerSoft: '#FEE2E2',
+  warning: '#F59E0B', warningSoft: '#FEF3C7', success: '#10B981', successSoft: '#D1FAE5', info: '#3B82F6', white: '#FFFFFF', black: '#0F172A',
+  overlay: 'rgba(15,23,42,0.55)', shadow: 'rgba(124,58,237,0.14)', gold: '#7C3AED', goldSoft: '#EDE9FE', gradientStart: '#7C3AED', gradientEnd: '#10B981', glow: 'rgba(124,58,237,0.2)',
 };
 
 export const darkTheme: AppPalette = {
-  background: '#062D29', backgroundElevated: '#0A3A34', surface: '#123F39', surfaceAlt: '#174A43', surfaceGlass: 'rgba(18,63,57,0.76)',
-  text: '#D4E2DC', textStrong: '#F7F3E8', mutedText: '#9DB5AC', primary: '#39B88D', primaryDark: '#168064', primarySoft: '#174F45',
-  secondary: '#0F8A73', accent: '#D4B06A', border: '#3D655C', borderStrong: '#66877E', danger: '#EF8A8A', dangerSoft: '#5A2828',
-  warning: '#D4B06A', warningSoft: '#55482B', success: '#58C9A0', successSoft: '#174F45', info: '#75B7AC', white: '#FFFFFF', black: '#031411',
-  overlay: 'rgba(2,18,15,0.78)', shadow: 'rgba(0,0,0,0.46)', gold: '#D4B06A', goldSoft: '#55482B', gradientStart: '#073832', gradientEnd: '#031F1C', glow: 'rgba(69,205,161,0.18)',
+  background: '#0B0F19', backgroundElevated: '#111827', surface: '#1E293B', surfaceAlt: '#334155', surfaceGlass: 'rgba(30,41,59,0.82)',
+  text: '#E2E8F0', textStrong: '#F8FAFC', mutedText: '#94A3B8', primary: '#A78BFA', primaryDark: '#7C3AED', primarySoft: '#2E1065',
+  secondary: '#34D399', accent: '#C4B5FD', border: '#334155', borderStrong: '#475569', danger: '#F87171', dangerSoft: '#451A1A',
+  warning: '#FBBF24', warningSoft: '#45300B', success: '#34D399', successSoft: '#064E3B', info: '#60A5FA', white: '#FFFFFF', black: '#020617',
+  overlay: 'rgba(2,6,23,0.78)', shadow: 'rgba(0,0,0,0.5)', gold: '#A78BFA', goldSoft: '#2E1065', gradientStart: '#7C3AED', gradientEnd: '#10B981', glow: 'rgba(167,139,250,0.22)',
 };
 
 export const spacing = { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, huge: 40 } as const;
