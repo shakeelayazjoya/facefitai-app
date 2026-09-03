@@ -17,7 +17,40 @@ export function Button({ title, variant = 'primary', size = 'md', disabled, load
   const backgroundColor = variant === 'primary' ? 'transparent' : variant === 'danger' ? theme.danger : variant === 'secondary' ? theme.surfaceGlass : 'transparent';
   const color = variant === 'primary' || variant === 'danger' ? theme.white : variant === 'secondary' ? theme.textStrong : theme.primary;
   const blocked = disabled || loading;
-  return <AnimatedPressable accessibilityRole="button" disabled={blocked} onPressIn={() => { scale.value = withSpring(0.97); }} onPressOut={() => { scale.value = withSpring(1); }} onPress={(event) => { void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress?.(event); }} style={[styles.base, styles[size], { backgroundColor, borderColor: variant === 'primary' ? theme.primary : theme.borderStrong, opacity: blocked ? 0.52 : 1, boxShadow: variant === 'primary' ? `0 7px 18px ${theme.shadow}` : undefined }, animatedStyle, style]} {...props}>{variant === 'primary' ? <LinearGradient pointerEvents="none" colors={[theme.primaryDark, theme.primary]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} /> : null}{loading ? <ActivityIndicator color={color} /> : <>{icon ? <Ionicons name={icon} size={size === 'sm' ? 15 : 17} color={color} /> : null}<Text style={[styles.text, size === 'sm' && styles.smallText, { color }]}>{title}</Text></>}</AnimatedPressable>;
+  return (
+    <AnimatedPressable
+      accessibilityRole="button"
+      disabled={blocked}
+      onPressIn={() => { scale.value = withSpring(0.97); }}
+      onPressOut={() => { scale.value = withSpring(1); }}
+      onPress={(event) => { void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); onPress?.(event); }}
+      style={[
+        styles.base,
+        styles[size],
+        {
+          backgroundColor,
+          borderColor: variant === 'primary' ? 'transparent' : theme.borderStrong,
+          opacity: blocked ? 0.52 : 1,
+          boxShadow: variant === 'primary' ? `0 8px 24px rgba(124,58,237,0.25)` : undefined,
+        },
+        animatedStyle,
+        style,
+      ]}
+      {...props}
+    >
+      {variant === 'primary' ? (
+        <LinearGradient pointerEvents="none" colors={[theme.primary, theme.secondary]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFill} />
+      ) : null}
+      {loading ? (
+        <ActivityIndicator color={color} />
+      ) : (
+        <>
+          {icon ? <Ionicons name={icon} size={size === 'sm' ? 15 : 17} color={color} /> : null}
+          <Text style={[styles.text, size === 'sm' && styles.smallText, { color }]}>{title}</Text>
+        </>
+      )}
+    </AnimatedPressable>
+  );
 }
 
 export const AppButton = Button;

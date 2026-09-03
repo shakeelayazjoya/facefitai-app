@@ -7,7 +7,9 @@ import { radii } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 function Geometry({ kind }: { kind: DetectorKind }) {
-  const theme = useAppTheme(); const stroke = theme.gold; const secondary = theme.primary;
+  const theme = useAppTheme();
+  const stroke = theme.primary;
+  const secondary = theme.secondary;
   if (kind === 'eye') return <><Ellipse cx="80" cy="48" rx="54" ry="25" fill="none" stroke={stroke} strokeWidth="2" /><Circle cx="80" cy="48" r="19" fill="none" stroke={secondary} strokeWidth="3" /><Circle cx="80" cy="48" r="7" fill={stroke} /><Path d="M26 48 Q80 4 134 48 Q80 92 26 48" fill="none" stroke={theme.textStrong} strokeWidth="1.5" /></>;
   if (kind === 'nose') return <><Path d="M80 12 C67 30 61 59 58 72 C55 84 67 89 80 88 C93 89 105 84 102 72 C99 58 93 30 80 12Z" fill="none" stroke={stroke} strokeWidth="2" /><Polyline points="63,78 70,84 80,80 90,84 97,78" fill="none" stroke={secondary} strokeWidth="2" /></>;
   if (kind === 'lips') return <><Path d="M25 52 C48 26 63 37 80 44 C97 37 112 26 135 52 C112 82 48 82 25 52Z" fill="none" stroke={stroke} strokeWidth="2" /><Path d="M25 52 Q80 64 135 52" fill="none" stroke={secondary} strokeWidth="2" /></>;
@@ -19,6 +21,26 @@ function Geometry({ kind }: { kind: DetectorKind }) {
 
 export function FeatureArtwork({ kind = 'face' }: { kind?: DetectorKind }) {
   const theme = useAppTheme();
-  return <LinearGradient colors={[theme.surfaceAlt, theme.backgroundElevated]} style={[styles.wrap, { borderColor: theme.borderStrong }]}><View style={[styles.halo, { borderColor: theme.border }]} /><Svg viewBox="0 0 160 100" style={styles.svg}><Geometry kind={kind} /><Rect x="12" y="8" width="22" height="2" fill={theme.gold} /><Rect x="12" y="8" width="2" height="18" fill={theme.gold} /><Rect x="126" y="8" width="22" height="2" fill={theme.gold} /><Rect x="146" y="8" width="2" height="18" fill={theme.gold} /><Rect x="12" y="90" width="22" height="2" fill={theme.gold} /><Rect x="12" y="74" width="2" height="18" fill={theme.gold} /><Rect x="126" y="90" width="22" height="2" fill={theme.gold} /><Rect x="146" y="74" width="2" height="18" fill={theme.gold} /></Svg><View style={[styles.ai, { backgroundColor: theme.surfaceGlass, borderColor: theme.border }]}><Ionicons name="sparkles" size={12} color={theme.gold} /></View></LinearGradient>;
+  return (
+    <LinearGradient colors={[theme.surface, theme.surfaceAlt]} style={[styles.wrap, { borderColor: theme.border }]}>
+      <View style={[styles.halo, { borderColor: theme.primarySoft }]} />
+      <Svg viewBox="0 0 160 100" style={styles.svg}>
+        <Geometry kind={kind} />
+        {/* Purple Corner Target Brackets Left */}
+        <Rect x="12" y="8" width="22" height="2.5" fill={theme.primary} rx="1" />
+        <Rect x="12" y="8" width="2.5" height="18" fill={theme.primary} rx="1" />
+        <Rect x="12" y="90" width="22" height="2.5" fill={theme.primary} rx="1" />
+        <Rect x="12" y="74" width="2.5" height="18" fill={theme.primary} rx="1" />
+        {/* Teal Corner Target Brackets Right */}
+        <Rect x="126" y="8" width="22" height="2.5" fill={theme.secondary} rx="1" />
+        <Rect x="145.5" y="8" width="2.5" height="18" fill={theme.secondary} rx="1" />
+        <Rect x="126" y="90" width="22" height="2.5" fill={theme.secondary} rx="1" />
+        <Rect x="145.5" y="74" width="2.5" height="18" fill={theme.secondary} rx="1" />
+      </Svg>
+      <View style={[styles.ai, { backgroundColor: theme.surfaceGlass, borderColor: theme.border }]}>
+        <Ionicons name="sparkles" size={13} color={theme.primary} />
+      </View>
+    </LinearGradient>
+  );
 }
 const styles = StyleSheet.create({ wrap: { width: '100%', height: 150, borderRadius: radii.lg, borderWidth: 1, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }, svg: { width: '90%', height: '88%' }, halo: { position: 'absolute', width: 150, height: 150, borderRadius: 75, borderWidth: 1, opacity: 0.45 }, ai: { position: 'absolute', right: 10, top: 10, width: 27, height: 27, borderRadius: 14, borderWidth: 1, alignItems: 'center', justifyContent: 'center' } });

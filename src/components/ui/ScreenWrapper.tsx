@@ -16,5 +16,19 @@ const EDGES_WITH_BOTTOM: readonly Edge[] = ['top', 'left', 'right', 'bottom'];
 const EDGES_ABOVE_TAB_BAR: readonly Edge[] = ['top', 'left', 'right'];
 
 interface Props extends PropsWithChildren { style?: ViewStyle; padded?: boolean; centered?: boolean; edges?: readonly Edge[] }
-export function ScreenWrapper({ children, style, padded, centered, edges }: Props) { const theme = useAppTheme(); const tabBarHeight = useContext(BottomTabBarHeightContext); const resolvedEdges = edges ?? (tabBarHeight == null ? EDGES_WITH_BOTTOM : EDGES_ABOVE_TAB_BAR); return <SafeAreaView edges={resolvedEdges} style={[styles.safe, { backgroundColor: theme.background }]}><LinearGradient pointerEvents="none" colors={[theme.gradientStart, theme.gradientEnd]} style={StyleSheet.absoluteFill} /><View pointerEvents="none" style={[styles.glowTop, { backgroundColor: theme.glow }]} /><View pointerEvents="none" style={[styles.glowBottom, { backgroundColor: theme.glow }]} /><KeyboardAvoidingView behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined} style={[styles.flex, padded && styles.padded, centered && styles.centered, style]}>{children}</KeyboardAvoidingView></SafeAreaView>; }
-const styles = StyleSheet.create({ safe: { flex: 1, overflow: 'hidden' }, flex: { flex: 1, zIndex: 1 }, centered: { alignItems: 'center', justifyContent: 'center' }, padded: { paddingHorizontal: 18 }, glowTop: { position: 'absolute', width: 320, height: 320, borderRadius: 160, top: -170, right: -120 }, glowBottom: { position: 'absolute', width: 280, height: 280, borderRadius: 140, bottom: -170, left: -120 } });
+export function ScreenWrapper({ children, style, padded, centered, edges }: Props) {
+  const theme = useAppTheme();
+  const tabBarHeight = useContext(BottomTabBarHeightContext);
+  const resolvedEdges = edges ?? (tabBarHeight == null ? EDGES_WITH_BOTTOM : EDGES_ABOVE_TAB_BAR);
+  return (
+    <SafeAreaView edges={resolvedEdges} style={[styles.safe, { backgroundColor: theme.background }]}>
+      <LinearGradient pointerEvents="none" colors={[theme.gradientStart, theme.gradientEnd]} style={StyleSheet.absoluteFill} />
+      <View pointerEvents="none" style={[styles.glowTop, { backgroundColor: 'rgba(124, 58, 237, 0.07)' }]} />
+      <View pointerEvents="none" style={[styles.glowBottom, { backgroundColor: 'rgba(16, 185, 129, 0.05)' }]} />
+      <KeyboardAvoidingView behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined} style={[styles.flex, padded && styles.padded, centered && styles.centered, style]}>
+        {children}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+const styles = StyleSheet.create({ safe: { flex: 1, overflow: 'hidden' }, flex: { flex: 1, zIndex: 1 }, centered: { alignItems: 'center', justifyContent: 'center' }, padded: { paddingHorizontal: 18 }, glowTop: { position: 'absolute', width: 340, height: 340, borderRadius: 170, top: -140, right: -100, opacity: 0.8 }, glowBottom: { position: 'absolute', width: 300, height: 300, borderRadius: 150, bottom: -140, left: -100, opacity: 0.8 } });
