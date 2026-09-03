@@ -16,7 +16,34 @@ function Geometry({ kind }: { kind: DetectorKind }) {
   if (kind === 'age') return <><Circle cx="80" cy="50" r="37" fill="none" stroke={stroke} strokeWidth="2" /><Path d="M60 42 Q67 36 74 42 M86 42 Q93 36 100 42 M64 68 Q80 78 96 68" fill="none" stroke={secondary} strokeWidth="2" /><Line x1="80" y1="12" x2="80" y2="24" stroke={theme.textStrong} /><Line x1="43" y1="50" x2="31" y2="50" stroke={theme.textStrong} /></>;
   if (kind === 'symmetry') return <><Ellipse cx="80" cy="50" rx="38" ry="43" fill="none" stroke={stroke} strokeWidth="2" /><Line x1="80" y1="5" x2="80" y2="95" stroke={secondary} strokeWidth="2" strokeDasharray="5 4" /><Circle cx="64" cy="42" r="4" fill={theme.textStrong} /><Circle cx="96" cy="42" r="4" fill={theme.textStrong} /></>;
   if (kind === 'emotion') return <><Circle cx="80" cy="50" r="38" fill="none" stroke={stroke} strokeWidth="2" /><Circle cx="63" cy="40" r="5" fill={secondary} /><Circle cx="97" cy="40" r="5" fill={secondary} /><Path d="M54 62 Q80 84 106 62" fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" /><Circle cx="120" cy="25" r="3" fill={stroke} /><Circle cx="40" cy="25" r="3" fill={stroke} /></>;
-  return <><Ellipse cx="80" cy="50" rx="39" ry="44" fill="none" stroke={stroke} strokeWidth="2" /><Path d="M52 40 Q64 31 74 40 M86 40 Q96 31 108 40 M61 70 Q80 82 99 70" fill="none" stroke={secondary} strokeWidth="2" /></>;
+  return (
+    <>
+      {/* Outer Face Contour */}
+      <Path d="M80 12 C52 12 40 32 40 54 C40 76 54 90 80 90 C106 90 120 76 120 54 C120 32 108 12 80 12Z" fill="none" stroke={stroke} strokeWidth="2.2" />
+      {/* 3D Wireframe Curves */}
+      <Path d="M46 36 Q80 24 114 36" stroke={stroke} strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+      <Path d="M42 50 Q80 40 118 50" stroke={secondary} strokeWidth="1" strokeDasharray="3 3" opacity="0.7" />
+      <Path d="M48 68 Q80 80 112 68" stroke={stroke} strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+      {/* Eyebrows */}
+      <Path d="M52 38 Q62 32 72 36" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+      <Path d="M88 36 Q98 32 108 38" stroke={secondary} strokeWidth="2" strokeLinecap="round" />
+      {/* Eyes */}
+      <Circle cx="62" cy="46" r="4.5" fill={stroke} />
+      <Circle cx="98" cy="46" r="4.5" fill={secondary} />
+      {/* Nose */}
+      <Path d="M80 40 L76 60 Q80 64 84 60 Z" stroke={secondary} strokeWidth="1.8" fill="none" />
+      {/* Smile */}
+      <Path d="M64 74 Q80 84 96 74" stroke={stroke} strokeWidth="2.2" strokeLinecap="round" />
+      {/* 14 Landmark Target Dots */}
+      {[
+        [80, 16, stroke], [52, 28, stroke], [108, 28, secondary],
+        [62, 46, stroke], [98, 46, secondary], [44, 52, stroke], [116, 52, secondary],
+        [80, 60, secondary], [64, 74, stroke], [96, 74, secondary], [80, 86, stroke]
+      ].map(([cx, cy, col], i) => (
+        <Circle key={`geo-dot-${i}`} cx={cx as number} cy={cy as number} r="3" fill={col as string} />
+      ))}
+    </>
+  );
 }
 
 export function FeatureArtwork({ kind = 'face' }: { kind?: DetectorKind }) {

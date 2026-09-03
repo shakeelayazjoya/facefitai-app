@@ -71,21 +71,21 @@ export function GradientHeader({ eyebrow, title, description, icon = 'sparkles',
         </View>
       ) : null}
 
-      <View style={styles.eyebrow}>
-        {eyebrow ? (
-          <>
-            <Ionicons name={icon} size={13} color={theme.primary} />
-            <AppText variant="caption" color={theme.primary} style={styles.label}>
-              {eyebrow}
-            </AppText>
-          </>
-        ) : null}
-      </View>
+      {eyebrow ? (
+        <View style={[styles.eyebrowPill, { backgroundColor: theme.primarySoft }]}>
+          <Ionicons name={icon} size={13} color={theme.primary} />
+          <AppText variant="caption" weight="black" color={theme.primary} style={styles.label}>
+            {eyebrow}
+          </AppText>
+        </View>
+      ) : null}
+
       <AppText variant="h1" weight="black" align="center" style={styles.title}>
         {title}
       </AppText>
+
       {description ? (
-        <AppText variant="small" muted align="center">
+        <AppText variant="body" weight="medium" color={theme.text} align="center" style={styles.description}>
           {description}
         </AppText>
       ) : null}
@@ -94,11 +94,12 @@ export function GradientHeader({ eyebrow, title, description, icon = 'sparkles',
 }
 
 const styles = StyleSheet.create({
-  wrap: { alignItems: 'center', paddingVertical: spacing.sm, paddingHorizontal: spacing.lg, gap: spacing.xxs },
-  logoBadge: { marginBottom: 2 },
-  eyebrow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  label: { textTransform: 'uppercase', letterSpacing: 1.1 },
-  title: { textTransform: 'uppercase', letterSpacing: 0.4 },
+  wrap: { alignItems: 'center', paddingVertical: spacing.md, paddingHorizontal: spacing.lg, gap: spacing.xs },
+  logoBadge: { marginBottom: 4 },
+  eyebrowPill: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 4, borderRadius: radii.pill, marginBottom: 2 },
+  label: { textTransform: 'uppercase', letterSpacing: 1.2 },
+  title: { textTransform: 'uppercase', letterSpacing: 0.6, fontSize: 26 },
+  description: { marginTop: 2, fontSize: 14, fontWeight: '500' },
   backAction: {
     position: 'absolute',
     left: 0,
