@@ -81,7 +81,7 @@ export function GradientHeader({ eyebrow, title, description, icon = 'sparkles',
           </>
         ) : null}
       </View>
-      <AppText variant="display" editorial weight="bold" align="center" style={styles.title}>
+      <AppText variant="h1" weight="black" align="center" style={styles.title}>
         {title}
       </AppText>
       {description ? (

@@ -35,11 +35,11 @@ export interface AppPalette {
 }
 
 export const lightTheme: AppPalette = {
-  background: '#F8FAFC', backgroundElevated: '#FFFFFF', surface: '#FFFFFF', surfaceAlt: '#F1F5F9', surfaceGlass: 'rgba(255,255,255,0.85)',
+  background: '#F8FAFC', backgroundElevated: '#FFFFFF', surface: '#FFFFFF', surfaceAlt: '#F1F5F9', surfaceGlass: 'rgba(255,255,255,0.88)',
   text: '#334155', textStrong: '#0F172A', mutedText: '#64748B', primary: '#7C3AED', primaryDark: '#5B21B6', primarySoft: '#EDE9FE',
   secondary: '#10B981', accent: '#8B5CF6', border: '#E2E8F0', borderStrong: '#CBD5E1', danger: '#EF4444', dangerSoft: '#FEE2E2',
   warning: '#F59E0B', warningSoft: '#FEF3C7', success: '#10B981', successSoft: '#D1FAE5', info: '#3B82F6', white: '#FFFFFF', black: '#0F172A',
-  overlay: 'rgba(15,23,42,0.55)', shadow: 'rgba(124,58,237,0.14)', gold: '#7C3AED', goldSoft: '#EDE9FE', gradientStart: '#7C3AED', gradientEnd: '#10B981', glow: 'rgba(124,58,237,0.2)',
+  overlay: 'rgba(15,23,42,0.55)', shadow: 'rgba(124,58,237,0.12)', gold: '#7C3AED', goldSoft: '#EDE9FE', gradientStart: '#F8FAFC', gradientEnd: '#F1F5F9', glow: 'rgba(124,58,237,0.05)',
 };
 
 export const darkTheme: AppPalette = {
@@ -47,7 +47,7 @@ export const darkTheme: AppPalette = {
   text: '#E2E8F0', textStrong: '#F8FAFC', mutedText: '#94A3B8', primary: '#A78BFA', primaryDark: '#7C3AED', primarySoft: '#2E1065',
   secondary: '#34D399', accent: '#C4B5FD', border: '#334155', borderStrong: '#475569', danger: '#F87171', dangerSoft: '#451A1A',
   warning: '#FBBF24', warningSoft: '#45300B', success: '#34D399', successSoft: '#064E3B', info: '#60A5FA', white: '#FFFFFF', black: '#020617',
-  overlay: 'rgba(2,6,23,0.78)', shadow: 'rgba(0,0,0,0.5)', gold: '#A78BFA', goldSoft: '#2E1065', gradientStart: '#7C3AED', gradientEnd: '#10B981', glow: 'rgba(167,139,250,0.22)',
+  overlay: 'rgba(2,6,23,0.78)', shadow: 'rgba(0,0,0,0.5)', gold: '#A78BFA', goldSoft: '#2E1065', gradientStart: '#0B0F19', gradientEnd: '#070A10', glow: 'rgba(167,139,250,0.08)',
 };
 
 export const spacing = { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, huge: 40 } as const;
