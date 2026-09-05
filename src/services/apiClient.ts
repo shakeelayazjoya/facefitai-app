@@ -25,7 +25,7 @@ interface RefreshPayload {
 type UnauthorizedHandler = () => Promise<void> | void;
 
 const envBaseUrl = process.env.EXPO_PUBLIC_API_URL;
-const baseURL = envBaseUrl && envBaseUrl.length > 0 ? envBaseUrl : 'http://localhost:8000';
+const baseURL = (envBaseUrl && envBaseUrl.trim().length > 0 ? envBaseUrl : 'https://api.faceshapelab.com').replace(/\/+$/, '');
 let unauthorizedHandler: UnauthorizedHandler | null = null;
 let refreshPromise: Promise<string | null> | null = null;
 
