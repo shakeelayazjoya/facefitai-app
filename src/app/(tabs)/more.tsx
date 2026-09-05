@@ -1,23 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
 import { ScreenWrapper } from '@/components/ui/ScreenWrapper';
-import {
-  BodyShapeSvg,
-  BodyTypeSvg,
-  CelebrityStarSvg,
-  ColorPaletteSvg,
-  FaceAgeSvg,
-  FaceIllustrationSvg,
-  KibbeDressSvg,
-  KibbeTestSvg,
-  SkinToneSvg,
-} from '@/components/ui/ToolIcons';
 import { radii, spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { useResponsive } from '@/utils/responsive';
 import { useToast } from '@/hooks/useToast';
+
+const goldenRatioImg = require('@/assets/images/tools/golden_ratio.jpg');
+const ageDetectorImg = require('@/assets/images/tools/age_detector.jpg');
+const colorAnalysisImg = require('@/assets/images/tools/color_analysis.jpg');
+const skinToneImg = require('@/assets/images/tools/skin_tone.jpg');
+const bodyShapeImg = require('@/assets/images/tools/body_shape.jpg');
+const bodyTypeImg = require('@/assets/images/tools/body_type.jpg');
+const kibbeGuideImg = require('@/assets/images/tools/kibbe_guide.jpg');
+const kibbeTestImg = require('@/assets/images/tools/kibbe_test.jpg');
+const celebrityMatchImg = require('@/assets/images/tools/celebrity_match.jpg');
 
 export default function MoreScreen() {
   const theme = useAppTheme();
@@ -36,11 +35,11 @@ export default function MoreScreen() {
           {/* Top Header Section */}
           <View style={styles.headerRow}>
             <View style={{ flex: 1 }}>
-              <AppText variant="h1" editorial weight="bold" style={styles.headerTitle}>
+              <AppText variant="h1" weight="black" style={styles.headerTitle}>
                 Tools
               </AppText>
               <AppText muted style={styles.headerSubtitle}>
-                Smart analysis for your best look
+                Smart biometric analysis & personal styling
               </AppText>
             </View>
 
@@ -51,7 +50,7 @@ export default function MoreScreen() {
                 { backgroundColor: theme.surface, borderColor: theme.border, opacity: pressed ? 0.7 : 1 },
               ]}
             >
-              <Ionicons name="help-circle-outline" size={18} color={theme.textStrong} />
+              <Ionicons name="help-circle-outline" size={17} color={theme.textStrong} />
               <AppText style={styles.howBtnText}>How it works</AppText>
             </Pressable>
           </View>
@@ -60,13 +59,15 @@ export default function MoreScreen() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <View style={styles.sectionTitleGroup}>
-                <Ionicons name="scan-outline" size={20} color={theme.textStrong} />
-                <AppText variant="h3" weight="bold" style={styles.sectionTitleText}>
+                <View style={[styles.sectionIconBadge, { backgroundColor: theme.primarySoft }]}>
+                  <Ionicons name="scan-outline" size={18} color={theme.primary} />
+                </View>
+                <AppText variant="h3" weight="black" style={styles.sectionTitleText}>
                   Face Tools
                 </AppText>
               </View>
               <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/(tabs)')}>
-                <AppText style={{ color: theme.primary, fontSize: 13, fontWeight: '600' }}>
+                <AppText style={{ color: theme.primary, fontSize: 13, fontWeight: '700' }}>
                   View all
                 </AppText>
               </TouchableOpacity>
@@ -77,27 +78,23 @@ export default function MoreScreen() {
               {/* Golden Ratio Card */}
               <View style={styles.bannerCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/golden-ratio')}
                   style={[styles.bannerCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={styles.bannerLeftCol}>
-                    <View>
-                      <AppText weight="bold" style={styles.bannerTitle}>
-                        Golden Ratio
-                      </AppText>
-                      <AppText muted style={styles.bannerSub}>
-                        Check your face proportions
-                      </AppText>
-                    </View>
-
+                  <View style={styles.bannerImgWrap}>
+                    <Image source={goldenRatioImg} style={styles.bannerImg} resizeMode="cover" />
                     <View style={[styles.arrowCircle, { backgroundColor: theme.primary }]}>
-                      <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+                      <Ionicons name="arrow-forward" size={14} color="#FFFFFF" />
                     </View>
                   </View>
-
-                  <View style={styles.bannerGraphic}>
-                    <FaceIllustrationSvg width={82} height={92} color={theme.primary} />
+                  <View style={styles.bannerContent}>
+                    <AppText weight="black" style={styles.bannerTitle}>
+                      Golden Ratio
+                    </AppText>
+                    <AppText muted style={styles.bannerSub}>
+                      Facial proportion score
+                    </AppText>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -105,27 +102,23 @@ export default function MoreScreen() {
               {/* AI Age Detector Card */}
               <View style={styles.bannerCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/(tabs)/age')}
                   style={[styles.bannerCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={styles.bannerLeftCol}>
-                    <View>
-                      <AppText weight="bold" style={styles.bannerTitle}>
-                        AI Age Detector
-                      </AppText>
-                      <AppText muted style={styles.bannerSub}>
-                        Estimate your facial age
-                      </AppText>
-                    </View>
-
+                  <View style={styles.bannerImgWrap}>
+                    <Image source={ageDetectorImg} style={styles.bannerImg} resizeMode="cover" />
                     <View style={[styles.arrowCircle, { backgroundColor: theme.primary }]}>
-                      <Ionicons name="arrow-forward" size={16} color="#FFFFFF" />
+                      <Ionicons name="arrow-forward" size={14} color="#FFFFFF" />
                     </View>
                   </View>
-
-                  <View style={styles.bannerGraphic}>
-                    <FaceAgeSvg width={82} height={92} color={theme.primary} />
+                  <View style={styles.bannerContent}>
+                    <AppText weight="black" style={styles.bannerTitle}>
+                      AI Age Detector
+                    </AppText>
+                    <AppText muted style={styles.bannerSub}>
+                      Estimate facial age
+                    </AppText>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -136,13 +129,15 @@ export default function MoreScreen() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <View style={styles.sectionTitleGroup}>
-                <Ionicons name="body-outline" size={20} color={theme.textStrong} />
-                <AppText variant="h3" weight="bold" style={styles.sectionTitleText}>
+                <View style={[styles.sectionIconBadge, { backgroundColor: theme.primarySoft }]}>
+                  <Ionicons name="body-outline" size={18} color={theme.primary} />
+                </View>
+                <AppText variant="h3" weight="black" style={styles.sectionTitleText}>
                   Body & Style
                 </AppText>
               </View>
               <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('/tools/kibbe-types')}>
-                <AppText style={{ color: theme.primary, fontSize: 13, fontWeight: '600' }}>
+                <AppText style={{ color: theme.primary, fontSize: 13, fontWeight: '700' }}>
                   View all
                 </AppText>
               </TouchableOpacity>
@@ -153,18 +148,18 @@ export default function MoreScreen() {
               {/* Color Analysis */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/color-analysis')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <ColorPaletteSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={colorAnalysisImg} style={styles.squareImg} resizeMode="cover" />
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Color Analysis
                   </AppText>
                   <AppText muted align="center" style={styles.squareSub}>
-                    Find your best colors
+                    Best colors
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -172,12 +167,12 @@ export default function MoreScreen() {
               {/* Skin Tone */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/skin-tone')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <SkinToneSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={skinToneImg} style={styles.squareImg} resizeMode="cover" />
                     <View style={[styles.checkBadge, { backgroundColor: theme.primary }]}>
                       <Ionicons name="checkmark" size={10} color="#FFFFFF" />
                     </View>
@@ -194,12 +189,15 @@ export default function MoreScreen() {
               {/* Body Shape */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/body-shape')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <BodyShapeSvg size={38} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={bodyShapeImg} style={styles.squareImg} resizeMode="cover" />
+                    <View style={[styles.checkBadge, { backgroundColor: theme.primary }]}>
+                      <Ionicons name="checkmark" size={10} color="#FFFFFF" />
+                    </View>
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Body Shape
@@ -213,18 +211,18 @@ export default function MoreScreen() {
               {/* Body Type */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/body-type')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <BodyTypeSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={bodyTypeImg} style={styles.squareImg} resizeMode="cover" />
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Body Type
                   </AppText>
                   <AppText muted align="center" style={styles.squareSub}>
-                    Identify your body type
+                    Proportions
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -232,18 +230,18 @@ export default function MoreScreen() {
               {/* Kibbe Guide */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/kibbe-types')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <KibbeDressSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={kibbeGuideImg} style={styles.squareImg} resizeMode="cover" />
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Kibbe Guide
                   </AppText>
                   <AppText muted align="center" style={styles.squareSub}>
-                    Find your Kibbe type
+                    Find your type
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -251,18 +249,18 @@ export default function MoreScreen() {
               {/* Kibbe Test */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/kibbe-test')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <KibbeTestSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={kibbeTestImg} style={styles.squareImg} resizeMode="cover" />
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Kibbe Test
                   </AppText>
                   <AppText muted align="center" style={styles.squareSub}>
-                    Take the Kibbe test
+                    Style quiz
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -270,18 +268,18 @@ export default function MoreScreen() {
               {/* Celebrity Match */}
               <View style={styles.squareCol}>
                 <TouchableOpacity
-                  activeOpacity={0.8}
+                  activeOpacity={0.82}
                   onPress={() => router.push('/tools/similar-faces')}
                   style={[styles.squareCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                 >
-                  <View style={[styles.squareIconBox, { backgroundColor: theme.primarySoft }]}>
-                    <CelebrityStarSvg size={36} color={theme.primary} />
+                  <View style={[styles.squareImgBox, { borderColor: theme.border }]}>
+                    <Image source={celebrityMatchImg} style={styles.squareImg} resizeMode="cover" />
                   </View>
                   <AppText weight="bold" align="center" style={styles.squareTitle}>
                     Celebrity Match
                   </AppText>
                   <AppText muted align="center" style={styles.squareSub}>
-                    Find your celebrity lookalike
+                    Find lookalike
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -313,48 +311,79 @@ const styles = StyleSheet.create({
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   sectionTitleGroup: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   sectionTitleText: { fontSize: 17 },
+  sectionIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   bannerGrid: { flexDirection: 'row', justifyContent: 'space-between' },
   bannerCol: { width: '48.5%' },
   bannerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 138,
-    padding: 14,
+    height: 184,
+    padding: 10,
     borderRadius: radii.xl,
     borderWidth: 1,
-    position: 'relative',
-    overflow: 'hidden',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
   },
-  bannerLeftCol: { flex: 1, height: '100%', justifyContent: 'space-between', zIndex: 2 },
-  bannerTitle: { fontSize: 15, lineHeight: 18 },
-  bannerSub: { fontSize: 11, marginTop: 4, lineHeight: 14 },
-  arrowCircle: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
-  bannerGraphic: { position: 'absolute', right: -4, bottom: -4, opacity: 0.95 },
+  bannerImgWrap: {
+    width: '100%',
+    height: 112,
+    borderRadius: radii.lg,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#0F172A',
+  },
+  bannerImg: { width: '100%', height: '100%' },
+  arrowCircle: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+  },
+  bannerContent: { paddingTop: 8, paddingHorizontal: 4 },
+  bannerTitle: { fontSize: 15, lineHeight: 18, letterSpacing: -0.2 },
+  bannerSub: { fontSize: 12, marginTop: 2, lineHeight: 15 },
   squareGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', gap: 10 },
-  squareCol: { width: '31%' },
+  squareCol: { width: '31.2%' },
   squareCard: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 135,
+    height: 146,
     paddingVertical: 12,
     paddingHorizontal: 6,
     borderRadius: radii.xl,
     borderWidth: 1,
+    boxShadow: '0 6px 18px rgba(0,0,0,0.03)',
   },
-  squareIconBox: { width: 50, height: 50, borderRadius: 25, alignItems: 'center', justifyContent: 'center', marginBottom: 8, position: 'relative' },
+  squareImgBox: {
+    width: 58,
+    height: 58,
+    borderRadius: radii.lg,
+    overflow: 'hidden',
+    marginBottom: 8,
+    borderWidth: 1,
+    position: 'relative',
+  },
+  squareImg: { width: '100%', height: '100%' },
   checkBadge: {
     position: 'absolute',
     top: -2,
     right: -2,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: 17,
+    height: 17,
+    borderRadius: 8.5,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: '#FFFFFF',
   },
-  squareTitle: { fontSize: 12, textAlign: 'center', lineHeight: 15, marginBottom: 2 },
-  squareSub: { fontSize: 10, textAlign: 'center', lineHeight: 13 },
+  squareTitle: { fontSize: 12.5, textAlign: 'center', lineHeight: 15, marginBottom: 2 },
+  squareSub: { fontSize: 10.5, textAlign: 'center', lineHeight: 13 },
 });
