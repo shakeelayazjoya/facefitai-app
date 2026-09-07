@@ -7,9 +7,9 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 const faceArtwork = require('@/assets/images/face_scanner_artwork.jpg');
 const eyeArtwork = require('@/assets/images/eye_scanner_artwork.jpg');
 
-export function FeatureArtwork({ kind = 'face' }: { kind?: DetectorKind }) {
+export function FeatureArtwork({ kind = 'face', artworkSource }: { kind?: DetectorKind; artworkSource?: any }) {
   const theme = useAppTheme();
-  const imageSource = kind === 'eye' ? eyeArtwork : faceArtwork;
+  const imageSource = artworkSource ?? (kind === 'eye' ? eyeArtwork : faceArtwork);
 
   return (
     <View style={[styles.wrap, { borderColor: theme.border, backgroundColor: theme.surfaceAlt }]}>

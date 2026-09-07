@@ -15,11 +15,11 @@ import { AnalysisLoader } from '@/components/ui/AnalysisLoader';
 import { FeatureArtwork } from './FeatureArtwork';
 import type { DetectorKind } from '@/types/api';
 
-interface Props { onPick: (asset: ImageAsset) => void; kind?: DetectorKind; disabled?: boolean; processing?: boolean; loadingLabel?: string; title?: string; description?: string; uploadAction?: string; cameraAction?: string; filePrefix?: string }
+interface Props { onPick: (asset: ImageAsset) => void; kind?: DetectorKind; artworkSource?: any; disabled?: boolean; processing?: boolean; loadingLabel?: string; title?: string; description?: string; uploadAction?: string; cameraAction?: string; filePrefix?: string }
 const maxBytes = 12 * 1024 * 1024;
 const normalize = (asset: ImagePicker.ImagePickerAsset, prefix: string): ImageAsset => ({ uri: asset.uri, fileName: asset.fileName ?? `${prefix}-${Date.now()}.jpg`, mimeType: asset.mimeType ?? 'image/jpeg', fileSize: asset.fileSize ?? null, width: asset.width, height: asset.height });
 
-export function ImagePickerPanel({ onPick, kind = 'face', disabled, processing, loadingLabel = 'Analyzing your photo', title = strings.faceAnalysisScan, description = strings.uploadHelper, uploadAction = strings.uploadSelfie, cameraAction = strings.cameraImage, filePrefix = 'face-scan' }: Props) {
+export function ImagePickerPanel({ onPick, kind = 'face', artworkSource, disabled, processing, loadingLabel = 'Analyzing your photo', title = strings.faceAnalysisScan, description = strings.uploadHelper, uploadAction = strings.uploadSelfie, cameraAction = strings.cameraImage, filePrefix = 'face-scan' }: Props) {
   const theme = useAppTheme(); const { showToast } = useToast(); const [busy, setBusy] = useState(false);
   const handle = (asset: ImagePicker.ImagePickerAsset) => { if (asset.fileSize && asset.fileSize > maxBytes) { showToast(strings.imageTooLarge); return; } onPick(normalize(asset, filePrefix)); };
   useEffect(() => { void ImagePicker.getPendingResultAsync().then((result) => { if (result && !('code' in result) && !result.canceled && result.assets?.[0]) handle(result.assets[0]); }).catch(() => undefined); }, []);
@@ -31,7 +31,7 @@ export function ImagePickerPanel({ onPick, kind = 'face', disabled, processing, 
         <AnalysisLoader label={processing ? loadingLabel : 'Preparing photo'} />
       ) : (
         <>
-          <FeatureArtwork kind={kind} />
+          <FeatureArtwork kind={kind} artworkSource={artworkSource} />
           <AppText variant="h2" weight="black" align="center" style={styles.titleText}>
             {title}
           </AppText>
