@@ -40,32 +40,143 @@ interface OverlayScale {
   radius: number;
 }
 
-function BoxShape({ box, scale, color, outline }: { box: Box; scale: OverlayScale; color: string; outline: string }) {
+function HudBoxShape({ box, scale, color }: { box: Box; scale: OverlayScale; color: string }) {
+  const cornerLen = Math.max(12, Math.min(box.width, box.height) * 0.22);
+  const x1 = box.x;
+  const y1 = box.y;
+  const x2 = box.x + box.width;
+  const y2 = box.y + box.height;
+
+  const tl = `${x1},${y1 + cornerLen} ${x1},${y1} ${x1 + cornerLen},${y1}`;
+  const tr = `${x2 - cornerLen},${y1} ${x2},${y1} ${x2},${y1 + cornerLen}`;
+  const bl = `${x1},${y1 + cornerLen} ${x1},${y2} ${x1 + cornerLen},${y2}`;
+  const br = `${x2 - cornerLen},${y2} ${x2},${y2} ${x2},${y2 - cornerLen}`;
+
   return (
     <>
-      <Rect x={box.x} y={box.y} width={box.width} height={box.height} rx={scale.radius} fill="none" stroke={outline} strokeWidth={scale.outline} opacity={0.58} />
-      <Rect x={box.x} y={box.y} width={box.width} height={box.height} rx={scale.radius} fill="none" stroke={color} strokeWidth={scale.line} opacity={0.86} />
+      {/* Subtle dashed bounding frame */}
+      <Rect
+        x={box.x}
+        y={box.y}
+        width={box.width}
+        height={box.height}
+        rx={scale.radius}
+        fill="none"
+        stroke={color}
+        strokeWidth={scale.line * 0.7}
+        strokeDasharray="6 6"
+        opacity={0.35}
+      />
+      {/* High-tech HUD corner brackets */}
+      <Polyline points={tl} fill="none" stroke={color} strokeWidth={scale.line * 1.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
+      <Polyline points={tr} fill="none" stroke={color} strokeWidth={scale.line * 1.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
+      <Polyline points={bl} fill="none" stroke={color} strokeWidth={scale.line * 1.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
+      <Polyline points={br} fill="none" stroke={color} strokeWidth={scale.line * 1.5} strokeLinecap="round" strokeLinejoin="round" opacity={0.95} />
     </>
   );
 }
 
-function StrongLine({ rows, scale, color, outline }: { rows: Landmark[]; scale: OverlayScale; color: string; outline: string }) {
+function StrongLine({ rows, scale, color, outline }: { rows: Landmark[]; scale: OverlayScale; color: string; outline?: string }) {
   if (rows.length < 2) return null;
   const linePoints = points(rows);
   return (
     <>
-      <Polyline points={linePoints} fill="none" stroke={outline} strokeWidth={scale.outline} strokeLinejoin="round" strokeLinecap="round" opacity={0.62} />
-      <Polyline points={linePoints} fill="none" stroke={color} strokeWidth={scale.line} strokeLinejoin="round" strokeLinecap="round" opacity={0.82} />
+      {outline ? (
+        <Polyline points={linePoints} fill="none" stroke={outline} strokeWidth={scale.outline} strokeLinejoin="round" strokeLinecap="round" opacity={0.3} />
+      ) : null}
+      <Polyline points={linePoints} fill="none" stroke={color} strokeWidth={scale.line} strokeLinejoin="round" strokeLinecap="round" opacity={0.88} />
     </>
   );
 }
 
-function LandmarkShapes({ rows, scale, color, outline, connect = false }: { rows: Landmark[]; scale: OverlayScale; color: string; outline: string; connect?: boolean }) {
+function BiometricFaceMesh({ rows, scale, primaryColor, accentColor }: { rows: Landmark[]; scale: OverlayScale; primaryColor: string; accentColor: string }) {
+  if (!rows.length) return null;
+
+  if (rows.length >= 68) {
+    const jaw = rows.slice(0, 17);
+    const rightEyebrow = rows.slice(17, 22);
+    const leftEyebrow = rows.slice(22, 27);
+    const noseBridge = rows.slice(27, 31);
+    const noseBase = rows.slice(30, 36);
+    const rightEye = [...rows.slice(36, 42), rows[36]];
+    const leftEye = [...rows.slice(42, 48), rows[42]];
+    const outerLips = [...rows.slice(48, 60), rows[48]];
+    const innerLips = [...rows.slice(60, 68), rows[60]];
+
+    const contourSegments = [
+      jaw,
+      rightEyebrow,
+      leftEyebrow,
+      noseBridge,
+      noseBase,
+      rightEye,
+      leftEye,
+      outerLips,
+      innerLips,
+    ];
+
+    return (
+      <>
+        {contourSegments.map((segment, idx) => {
+          if (segment.length < 2) return null;
+          return (
+            <Polyline
+              key={`contour-${idx}`}
+              points={points(segment)}
+              fill="none"
+              stroke={primaryColor}
+              strokeWidth={scale.line * 0.95}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              opacity={0.78}
+            />
+          );
+        })}
+        {rows.map((point) => (
+          <Circle
+            key={point.index ?? `${point.x}-${point.y}`}
+            cx={point.x}
+            cy={point.y}
+            r={scale.point}
+            fill={accentColor}
+            fillOpacity={0.92}
+          />
+        ))}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {rows.map((point) => (
+        <Circle
+          key={point.index ?? `${point.x}-${point.y}`}
+          cx={point.x}
+          cy={point.y}
+          r={scale.point}
+          fill={accentColor}
+          fillOpacity={0.9}
+        />
+      ))}
+    </>
+  );
+}
+
+function LandmarkShapes({ rows, scale, color, connect = false }: { rows: Landmark[]; scale: OverlayScale; color: string; connect?: boolean }) {
   if (!rows.length) return null;
   return (
     <>
-      {connect ? <StrongLine rows={rows} scale={scale} color={color} outline={outline} /> : null}
-      {rows.map((point) => <Circle key={point.index} cx={point.x} cy={point.y} r={scale.point} fill={color} fillOpacity={0.66} stroke={outline} strokeOpacity={0.55} strokeWidth={scale.pointOutline} />)}
+      {connect ? <StrongLine rows={rows} scale={scale} color={color} /> : null}
+      {rows.map((point) => (
+        <Circle
+          key={point.index ?? `${point.x}-${point.y}`}
+          cx={point.x}
+          cy={point.y}
+          r={scale.point}
+          fill={color}
+          fillOpacity={0.88}
+        />
+      ))}
     </>
   );
 }
@@ -73,30 +184,73 @@ function LandmarkShapes({ rows, scale, color, outline, connect = false }: { rows
 function Geometry({ kind, result, scale, colors }: { kind: DetectorKind; result: DetectorResult; scale: OverlayScale; colors: AppPalette }) {
   if (kind === 'face') {
     const face = result as StyleReport;
-    return <>{face.face_box ? <BoxShape box={face.face_box} scale={scale} color={colors.primary} outline={colors.black} /> : null}<LandmarkShapes rows={face.landmarks ?? []} scale={scale} color={colors.primary} outline={colors.black} /></>;
+    return (
+      <>
+        {face.face_box ? <HudBoxShape box={face.face_box} scale={scale} color={colors.primary} /> : null}
+        <BiometricFaceMesh
+          rows={face.landmarks ?? []}
+          scale={scale}
+          primaryColor={colors.primary}
+          accentColor={colors.secondary}
+        />
+      </>
+    );
   }
   if (kind === 'eye') {
     const eye = result as EyeAnalysisResponse;
-    return <><BoxShape box={eye.eye_boxes.combined} scale={scale} color={colors.info} outline={colors.black} /><BoxShape box={eye.eye_boxes.left} scale={scale} color={colors.primary} outline={colors.black} /><BoxShape box={eye.eye_boxes.right} scale={scale} color={colors.primary} outline={colors.black} /><LandmarkShapes rows={eye.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;
+    return (
+      <>
+        <HudBoxShape box={eye.eye_boxes.combined} scale={scale} color={colors.info} />
+        <HudBoxShape box={eye.eye_boxes.left} scale={scale} color={colors.primary} />
+        <HudBoxShape box={eye.eye_boxes.right} scale={scale} color={colors.primary} />
+        <LandmarkShapes rows={eye.landmarks} scale={scale} color={colors.secondary} />
+      </>
+    );
   }
   if (kind === 'nose') {
     const nose = result as NoseAnalysisResponse;
-    return <><BoxShape box={nose.nose_box} scale={scale} color={colors.primary} outline={colors.black} /><LandmarkShapes rows={nose.landmarks} scale={scale} color={colors.warning} outline={colors.black} connect /></>;
+    return (
+      <>
+        <HudBoxShape box={nose.nose_box} scale={scale} color={colors.primary} />
+        <LandmarkShapes rows={nose.landmarks} scale={scale} color={colors.secondary} connect />
+      </>
+    );
   }
   if (kind === 'lips') {
     const lips = result as LipsAnalysisResponse;
-    return <><BoxShape box={lips.lips_box} scale={scale} color={colors.accent} outline={colors.black} /><LandmarkShapes rows={lips.landmarks} scale={scale} color={colors.warning} outline={colors.black} connect /></>;
+    return (
+      <>
+        <HudBoxShape box={lips.lips_box} scale={scale} color={colors.accent} />
+        <LandmarkShapes rows={lips.landmarks} scale={scale} color={colors.secondary} connect />
+      </>
+    );
   }
   if (kind === 'age') {
     const age = result as AgeAnalysisResponse;
-    return <><BoxShape box={age.face_box} scale={scale} color={colors.info} outline={colors.black} /><LandmarkShapes rows={age.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;
+    return (
+      <>
+        <HudBoxShape box={age.face_box} scale={scale} color={colors.info} />
+        <LandmarkShapes rows={age.landmarks} scale={scale} color={colors.secondary} />
+      </>
+    );
   }
   if (kind === 'emotion') {
     const expr = result as ExpressionAnalysisResponse;
-    return <>{expr.face_box ? <BoxShape box={expr.face_box} scale={scale} color={colors.primary} outline={colors.black} /> : null}<LandmarkShapes rows={expr.mesh_landmarks ?? []} scale={scale} color={colors.gold} outline={colors.black} /></>;
+    return (
+      <>
+        {expr.face_box ? <HudBoxShape box={expr.face_box} scale={scale} color={colors.primary} /> : null}
+        <LandmarkShapes rows={expr.mesh_landmarks ?? []} scale={scale} color={colors.secondary} />
+      </>
+    );
   }
   const symmetry = result as SymmetryAnalysisResponse;
-  return <><BoxShape box={symmetry.face_box} scale={scale} color={colors.info} outline={colors.black} /><StrongLine rows={symmetry.centerline} scale={scale} color={colors.accent} outline={colors.black} /><LandmarkShapes rows={symmetry.landmarks} scale={scale} color={colors.warning} outline={colors.black} /></>;
+  return (
+    <>
+      <HudBoxShape box={symmetry.face_box} scale={scale} color={colors.info} />
+      <StrongLine rows={symmetry.centerline} scale={scale} color={colors.accent} />
+      <LandmarkShapes rows={symmetry.landmarks} scale={scale} color={colors.secondary} />
+    </>
+  );
 }
 
 export function DetectorOverlay({ asset, kind, result, processing = false, loadingLabel = 'Analyzing', onImageReady }: Props) {
@@ -104,31 +258,39 @@ export function DetectorOverlay({ asset, kind, result, processing = false, loadi
   const width = asset.width || 1;
   const height = asset.height || 1;
   const base = Math.max(width, height);
-  // Drive the frame from the aspect ratio, never from a max height: with both
-  // `width: '100%'` and `aspectRatio` set, a height cap makes flexbox shrink the
-  // WIDTH to preserve the ratio, which left a portrait photo ~250dp wide inside a
-  // 328dp column. Clamping the ratio keeps the frame edge-to-edge while stopping a
-  // pathological panorama or tower from producing an unusable frame. The Svg uses
-  // `meet`, which matches the Image's `contain`, so both letterbox identically and
-  // the landmark overlay stays aligned even when the clamp bites.
   const frameRatio = Math.min(Math.max(width / height, 0.5), 2.2);
+
+  // Scaled dimensions with micro-node caps to avoid bloated overlapping points
   const scale: OverlayScale = {
-    line: Math.max(2.5, base * 0.0045),
-    outline: Math.max(4.5, base * 0.008),
-    point: Math.max(3.5, base * 0.0055),
-    pointOutline: Math.max(1.2, base * 0.0018),
+    line: Math.max(1.6, Math.min(3.8, base * 0.0018)),
+    outline: Math.max(2.8, Math.min(5.5, base * 0.003)),
+    point: Math.max(1.6, Math.min(3.6, base * 0.0018)),
+    pointOutline: Math.max(0.8, Math.min(1.8, base * 0.001)),
     radius: Math.max(8, base * 0.014),
   };
 
   return (
     <View style={[styles.frame, { aspectRatio: frameRatio, backgroundColor: theme.black }]}>
-      <Image source={{ uri: asset.uri }} style={StyleSheet.absoluteFill} contentFit="contain" cachePolicy="memory-disk" recyclingKey={asset.uri} transition={60} onLoad={onImageReady} onError={onImageReady} />
+      <Image
+        source={{ uri: asset.uri }}
+        style={StyleSheet.absoluteFill}
+        contentFit="contain"
+        cachePolicy="memory-disk"
+        recyclingKey={asset.uri}
+        transition={60}
+        onLoad={onImageReady}
+        onError={onImageReady}
+      />
       {result ? (
         <Svg style={StyleSheet.absoluteFill} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" pointerEvents="none">
           <Geometry kind={kind} result={result} scale={scale} colors={theme} />
         </Svg>
       ) : null}
-      {processing ? <View style={[StyleSheet.absoluteFill, styles.loading, { backgroundColor: theme.overlay }]}><AnalysisLoader label={loadingLabel} compact /></View> : null}
+      {processing ? (
+        <View style={[StyleSheet.absoluteFill, styles.loading, { backgroundColor: theme.overlay }]}>
+          <AnalysisLoader label={loadingLabel} compact variant="overlay" />
+        </View>
+      ) : null}
     </View>
   );
 }
