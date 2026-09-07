@@ -7,9 +7,15 @@ import { radii, spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export interface ScoreMetric { label: string; value: number }
-interface Props { title: string; icon: keyof typeof Ionicons.glyphMap; scores: ScoreMetric[]; delay?: number }
+interface Props {
+  title: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  scores: ScoreMetric[];
+  delay?: number;
+  columns?: 1 | 2;
+}
 
-export function ResultScoreSection({ title, icon, scores, delay = 0 }: Props) {
+export function ResultScoreSection({ title, icon, scores, delay = 0, columns = 2 }: Props) {
   const theme = useAppTheme();
   if (!scores.length) return null;
   return (
@@ -20,14 +26,19 @@ export function ResultScoreSection({ title, icon, scores, delay = 0 }: Props) {
         </View>
         <AppText variant="h3" weight="bold">{title}</AppText>
       </View>
-      <View style={styles.scores}>
+      <View style={columns === 2 ? styles.grid : styles.scores}>
         {scores.map((score, index) => (
-          <ScoreBar
+          <View
             key={score.label}
-            {...score}
-            highlight={index === 0}
-            delay={delay + index * 60}
-          />
+            style={columns === 2 ? styles.gridItem : undefined}
+          >
+            <ScoreBar
+              {...score}
+              variant={columns === 2 ? 'tile' : 'bar'}
+              highlight={index === 0}
+              delay={delay + index * 40}
+            />
+          </View>
         ))}
       </View>
     </AnimatedCard>
@@ -35,8 +46,19 @@ export function ResultScoreSection({ title, icon, scores, delay = 0 }: Props) {
 }
 
 const styles = StyleSheet.create({
-  heading: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
+  heading: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.md },
   icon: { width: 34, height: 34, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
   scores: { gap: spacing.md },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -spacing.xs,
+    rowGap: spacing.sm,
+  },
+  gridItem: {
+    width: '50%',
+    paddingHorizontal: spacing.xs,
+  },
 });
+
 
