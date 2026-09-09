@@ -6,14 +6,21 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 
 const faceArtwork = require('@/assets/images/face_scanner_artwork.jpg');
 const eyeArtwork = require('@/assets/images/eye_scanner_artwork.jpg');
+const detectorArtwork: Partial<Record<DetectorKind, any>> = {
+  face: require('@/assets/images/detectors/face-shape.jpg'),
+  nose: require('@/assets/images/detectors/nose-shape.jpg'),
+  lips: require('@/assets/images/detectors/lip-shape.jpg'),
+  emotion: require('@/assets/images/detectors/emotion.jpg'),
+  symmetry: require('@/assets/images/detectors/symmetry.jpg'),
+};
 
 export function FeatureArtwork({ kind = 'face', artworkSource }: { kind?: DetectorKind; artworkSource?: any }) {
   const theme = useAppTheme();
-  const imageSource = artworkSource ?? (kind === 'eye' ? eyeArtwork : faceArtwork);
+  const imageSource = artworkSource ?? detectorArtwork[kind] ?? (kind === 'eye' ? eyeArtwork : faceArtwork);
 
   return (
     <View style={[styles.wrap, { borderColor: theme.border, backgroundColor: theme.surfaceAlt }]}>
-      <Image source={imageSource} style={styles.image} resizeMode="cover" />
+      <Image source={imageSource} style={styles.image} resizeMode="cover" accessible={false} />
       <View style={[styles.overlay, { backgroundColor: 'rgba(0,0,0,0.15)' }]} />
       <View style={[styles.ai, { backgroundColor: theme.surfaceGlass, borderColor: theme.border }]}>
         <Ionicons name="sparkles" size={13} color={theme.primary} />
